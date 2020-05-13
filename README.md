@@ -82,7 +82,6 @@ $ qrn -file data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
     "Samples": 189,
     "Count": 189,
     "Histogram": [
-      {},
       {
         "57µs - 115µs": 1
       },
