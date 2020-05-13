@@ -8,31 +8,31 @@ Currently only MySQL is supported.
 ```
 Usage of qrn:
   -dsn string
-    	data source name
+      data source name
   -file string
-    	file path of execution queries
+      file path of execution queries
   -hbins int
-    	histogram bins (default 10)
+      histogram bins (default 10)
   -hinterval string
-    	histogram bins (default "0")
+      histogram interval (default "0")
   -histogram
-    	show histogram
+      show histogram
   -html
-    	output histogram html
+      output histogram html
   -key string
-    	json key of query (default "query")
+      json key of query (default "query")
   -loop
-    	input data loop flag (default true)
+      input data loop flag (default true)
   -nagents int
-    	number of agents (default 1)
+      number of agents (default 1)
   -random
-    	randomize the start position of input data (default true)
+      randomize the start position of input data (default true)
   -rate int
-    	rate limit for each agent (qps). zero is unlimited
+      rate limit for each agent (qps). zero is unlimited
   -time int
-    	test run time (sec) (default 60)
+      test run time (sec) (default 60)
   -version
-    	Print version and exit
+      Print version and exit
 ```
 
 ```

@@ -36,7 +36,7 @@ func parseFlags() (flags *Flags) {
 	flag.BoolVar(&flags.TaskOptions.Loop, "loop", true, "input data loop flag")
 	flag.BoolVar(&flags.TaskOptions.Random, "random", true, "randomize the start position of input data")
 	flag.IntVar(&flags.TaskOptions.HBins, "hbins", DefaultHBins, "histogram bins")
-	hinterval := flag.String("hinterval", "0", "histogram bins")
+	hinterval := flag.String("hinterval", "0", "histogram interval")
 	flag.BoolVar(&flags.Histogram, "histogram", false, "show histogram")
 	flag.BoolVar(&flags.HTML, "html", false, "output histogram html")
 	argVersion := flag.Bool("version", false, "Print version and exit")
