@@ -2,3 +2,5 @@
 *.jsonl
 *.pprof
 *.html
+*.gz
+*.sha1sum
