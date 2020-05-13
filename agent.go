@@ -57,6 +57,7 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 	err := agent.Data.EachLine(func(query string) (bool, error) {
 		select {
 		case <-ctx.Done():
+			recorder.Add(responseTimes)
 			return false, nil
 		case <-ticker.C:
 			recorder.Add(responseTimes)

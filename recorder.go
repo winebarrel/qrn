@@ -32,7 +32,7 @@ type RecordReport struct {
 	Response    *tachymeter.Metrics
 }
 
-func (recorder *Recorder) appendResponseTimes(responseTimes []time.Duration) {
+func (recorder *Recorder) AppendResponseTimes(responseTimes []time.Duration) {
 	recorder.Lock()
 	defer recorder.Unlock()
 	recorder.ResponseTimes = append(recorder.ResponseTimes, responseTimes...)
@@ -45,7 +45,7 @@ func (recorder *Recorder) Start() {
 
 	go func() {
 		for responseTimes := range ch {
-			recorder.appendResponseTimes(responseTimes)
+			recorder.AppendResponseTimes(responseTimes)
 		}
 	}()
 
