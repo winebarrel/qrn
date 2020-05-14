@@ -23,7 +23,26 @@ func init() {
 
 func main() {
 	flags := parseFlags()
+
+	if flags.Script != "" {
+		path, err := evalScript(flags.Script)
+
+		if path != "" {
+			defer os.Remove(path)
+		}
+
+		if err != nil {
+			log.Fatalf("script error: %s", err)
+		}
+
+		flags.TaskOptions.File = path
+	}
+
 	task, err := qrn.NewTask(flags.TaskOptions)
+
+	if err != nil {
+		log.Fatalf("task create error: %s", err)
+	}
 
 	if err != nil {
 		log.Fatal(err)
@@ -32,7 +51,7 @@ func main() {
 	err = task.Prepare()
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("task prepare error: %s", err)
 	}
 
 	recorder, err := task.Run(flags.Time, ReportPeriod*time.Second, withProgress(func(count int, qps float64, width int, spnr string) {
@@ -43,13 +62,13 @@ func main() {
 	fmt.Fprintf(os.Stderr, "\r\n\n")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("task run error: %s", err)
 	}
 
 	err = showResult(flags, recorder)
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("show result error: %s", err)
 	}
 }
 

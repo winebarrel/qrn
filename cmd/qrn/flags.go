@@ -19,6 +19,7 @@ type Flags struct {
 	Time        time.Duration
 	Histogram   bool
 	HTML        bool
+	Script      string
 	TaskOptions *qrn.TaskOptions
 }
 
@@ -30,8 +31,9 @@ func parseFlags() (flags *Flags) {
 	flag.StringVar(&flags.TaskOptions.DSN, "dsn", "", "data source name")
 	flag.IntVar(&flags.TaskOptions.NAgents, "nagents", 1, "number of agents")
 	argTime := flag.Int("time", DefaultTime, "test run time (sec)")
+	flag.StringVar(&flags.TaskOptions.File, "data", "", "file path of execution queries")
+	flag.StringVar(&flags.Script, "script", "", "file path of execution script")
 	flag.IntVar(&flags.TaskOptions.Rate, "rate", 0, "rate limit for each agent (qps). zero is unlimited")
-	flag.StringVar(&flags.TaskOptions.File, "file", "", "file path of execution queries")
 	flag.StringVar(&flags.TaskOptions.Key, "key", DefaultJsonKey, "json key of query")
 	flag.BoolVar(&flags.TaskOptions.Loop, "loop", true, "input data loop flag")
 	flag.BoolVar(&flags.TaskOptions.Random, "random", true, "randomize the start position of input data")
@@ -70,12 +72,18 @@ func parseFlags() (flags *Flags) {
 		printErrorAndExit("'-rate' must be >= 0")
 	}
 
-	if flags.TaskOptions.File == "" {
-		printErrorAndExit("'-file' is required")
+	if flags.TaskOptions.File == "" && flags.Script == "" {
+		printErrorAndExit("'-data' or '-script' is required")
+	} else if flags.TaskOptions.File != "" && flags.Script != "" {
+		printErrorAndExit("cannot specify both '-data' and '-script'")
 	}
 
 	if flags.TaskOptions.Key == "" {
 		printErrorAndExit("'-key' dose not allow empty")
+	}
+
+	if flags.Script != "" {
+		flags.TaskOptions.Key = DefaultJsonKey
 	}
 
 	if flags.TaskOptions.Random {
