@@ -10,7 +10,7 @@ import (
 	"github.com/valyala/fastjson"
 )
 
-const ThrottleInterrupt = time.Duration(1000000) // 1ms
+const ThrottleInterrupt = 1 * time.Millisecond
 
 type Data struct {
 	Path   string
