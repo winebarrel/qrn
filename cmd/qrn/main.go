@@ -44,10 +44,6 @@ func main() {
 		log.Fatalf("task create error: %s", err)
 	}
 
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	err = task.Prepare()
 
 	if err != nil {

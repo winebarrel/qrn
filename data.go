@@ -10,6 +10,8 @@ import (
 	"github.com/valyala/fastjson"
 )
 
+const ThrottleInterrupt = time.Duration(1000000) // 1ms
+
 type Data struct {
 	Path   string
 	Key    string
@@ -44,10 +46,10 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 	}
 
 	var parser fastjson.Parser
-	limit := time.Duration(0)
+	originLimit := time.Duration(0)
 
 	if data.Rate > 0 {
-		limit = time.Second / time.Duration(data.Rate+1)
+		originLimit = time.Second / time.Duration(data.Rate+1)
 	}
 
 	scanner := bufio.NewScanner(file)
@@ -56,7 +58,12 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 		scanner.Scan()
 	}
 
+	ticker := time.NewTicker(ThrottleInterrupt)
+	defer ticker.Stop()
 	start := time.Now()
+	limit := originLimit
+	var tx int64 = 0
+	throttleStart := time.Now()
 
 	for {
 		for scanner.Scan() {
@@ -73,6 +80,24 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 
 			if !cont || err != nil {
 				return err
+			}
+
+			tx++
+
+			select {
+			case <-ticker.C:
+				throttleEnd := time.Now()
+				elapsed := throttleEnd.Sub(throttleStart)
+				actual := elapsed / time.Duration(tx)
+				limit += (originLimit - actual)
+
+				if limit < 0 {
+					limit = 0
+				}
+
+				throttleStart = throttleEnd
+				tx = 0
+			default:
 			}
 
 			end := time.Now()
