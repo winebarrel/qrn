@@ -13,15 +13,16 @@ type Task struct {
 }
 
 type TaskOptions struct {
-	DSN       string
-	NAgents   int
-	Rate      int
-	File      string
-	Key       string
-	Loop      bool
-	Random    bool
-	HBins     int
-	HInterval time.Duration
+	DSN         string
+	NAgents     int
+	Rate        int
+	File        string
+	Key         string
+	Loop        bool
+	Random      bool
+	HBins       int
+	HInterval   time.Duration
+	QPSInterval time.Duration
 }
 
 func NewTask(options *TaskOptions) (*Task, error) {
@@ -68,10 +69,11 @@ func (task *Task) Prepare() error {
 
 func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*Recorder)) (*Recorder, error) {
 	recorder := &Recorder{
-		NAgent:    task.Options.NAgents,
-		Rate:      task.Options.Rate,
-		HBins:     task.Options.HBins,
-		HInterval: task.Options.HInterval,
+		NAgent:      task.Options.NAgents,
+		Rate:        task.Options.Rate,
+		HBins:       task.Options.HBins,
+		HInterval:   task.Options.HInterval,
+		QPSInternal: task.Options.QPSInterval,
 	}
 
 	defer func() {

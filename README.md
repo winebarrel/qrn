@@ -25,6 +25,8 @@ Usage of ./qrn:
     	input data loop flag (default true)
   -nagents int
     	number of agents (default 1)
+  -qpsinterval int
+    	QPS interval (sec) (default 1)
   -random
     	randomize the start position of input data (default true)
   -rate int
@@ -62,6 +64,7 @@ $ qrn -file data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
   "NAgent": 4,
   "Rate": 5,
   "QPS": 18.287694303306097,
+  "MaxQPS": 21,
   "ExpectedQPS": 20,
   "Response": {
     "Time": {

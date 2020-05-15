@@ -14,6 +14,7 @@ var version string
 const DefaultTime = 60
 const DefaultJsonKey = "query"
 const DefaultHBins = 10
+const DefaultQPSInterval = 1
 
 type Flags struct {
 	Time        time.Duration
@@ -34,6 +35,7 @@ func parseFlags() (flags *Flags) {
 	flag.StringVar(&flags.TaskOptions.File, "data", "", "file path of execution queries")
 	flag.StringVar(&flags.Script, "script", "", "file path of execution script")
 	flag.IntVar(&flags.TaskOptions.Rate, "rate", 0, "rate limit for each agent (qps). zero is unlimited")
+	qpsinterval := flag.Int("qpsinterval", DefaultQPSInterval, "QPS interval (sec)")
 	flag.StringVar(&flags.TaskOptions.Key, "key", DefaultJsonKey, "json key of query")
 	flag.BoolVar(&flags.TaskOptions.Loop, "loop", true, "input data loop flag")
 	flag.BoolVar(&flags.TaskOptions.Random, "random", true, "randomize the start position of input data")
@@ -71,6 +73,12 @@ func parseFlags() (flags *Flags) {
 	if flags.TaskOptions.Rate < 0 {
 		printErrorAndExit("'-rate' must be >= 0")
 	}
+
+	if *qpsinterval < 1 {
+		printErrorAndExit("'-rate' must be >= 1")
+	}
+
+	flags.TaskOptions.QPSInterval = time.Duration(*qpsinterval) * time.Second
 
 	if flags.TaskOptions.File == "" && flags.Script == "" {
 		printErrorAndExit("'-data' or '-script' is required")

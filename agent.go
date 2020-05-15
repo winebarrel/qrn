@@ -52,7 +52,7 @@ func (agent *Agent) Prepare() error {
 func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 	ticker := time.NewTicker(AgentInterruptPeriod)
 	defer ticker.Stop()
-	responseTimes := []time.Duration{}
+	responseTimes := []DataPoint{}
 
 	err := agent.Data.EachLine(func(query string) (bool, error) {
 		select {
@@ -69,7 +69,10 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 				return false, err
 			}
 
-			responseTimes = append(responseTimes, rt)
+			responseTimes = append(responseTimes, DataPoint{
+				Time:         time.Now(),
+				ResponseTime: rt,
+			})
 		}
 
 		return true, nil
