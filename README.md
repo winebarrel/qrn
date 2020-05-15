@@ -65,6 +65,7 @@ $ qrn -file data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
   "Rate": 5,
   "QPS": 18.287694303306097,
   "MaxQPS": 21,
+  "MidQPS": 19,
   "ExpectedQPS": 20,
   "Response": {
     "Time": {
