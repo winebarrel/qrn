@@ -118,6 +118,10 @@ $ qrn -file data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
 }
 ```
 
+# DSN Examples
+
+see https://github.com/go-sql-driver/mysql#dsn-data-source-name
+
 ## Use Script as Data
 
 ```
