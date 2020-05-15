@@ -138,11 +138,11 @@ $ qrn  -script data.js -dsn root:@/ -nagents 8 -time 15 -rate 5
 If the `-html` is added, the histogram HTML will be output.
 
 ```
-$ qrn -data data.jsonl -dsn root:@/ -nagents 8 -time 15 -html -hinterval 1ms -html
+$ qrn -data data.jsonl -dsn root:@/ -nagents 8 -time 15 -html -hinterval 5ms -html
 - run 654003 queries (78425 qps)
 ...
 
 output qrn-1589336606.html
 ```
 
-![](https://user-images.githubusercontent.com/117768/81766121-78632400-9510-11ea-898a-83248aa5faeb.png)
+![](https://user-images.githubusercontent.com/117768/82013568-93bb6400-96b5-11ea-9001-cde7e2e50484.png)
