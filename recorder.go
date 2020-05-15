@@ -15,7 +15,7 @@ type Recorder struct {
 	Started       time.Time
 	Finished      time.Time
 	Metrics       *tachymeter.Metrics
-	NAgent        int
+	NAgents       int
 	Rate          int
 	HBins         int
 	HInterval     time.Duration
@@ -28,7 +28,7 @@ type RecordReport struct {
 	Finished    time.Time
 	Elapsed     time.Duration
 	Queries     int
-	NAgent      int
+	NAgents     int
 	Rate        int
 	QPS         float64
 	MaxQPS      float64
@@ -145,10 +145,10 @@ func (recorder *Recorder) Report() *RecordReport {
 		Finished:    recorder.Finished,
 		Elapsed:     nanoElapsed / time.Second,
 		Queries:     count,
-		NAgent:      recorder.NAgent,
+		NAgents:     recorder.NAgents,
 		Rate:        recorder.Rate,
 		QPS:         float64(count) * float64(time.Second) / float64(nanoElapsed),
-		ExpectedQPS: recorder.NAgent * recorder.Rate,
+		ExpectedQPS: recorder.NAgents * recorder.Rate,
 		Response:    recorder.Metrics,
 	}
 

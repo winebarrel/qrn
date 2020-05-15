@@ -69,7 +69,7 @@ func (task *Task) Prepare() error {
 
 func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*Recorder)) (*Recorder, error) {
 	recorder := &Recorder{
-		NAgent:      task.Options.NAgents,
+		NAgents:     task.Options.NAgents,
 		Rate:        task.Options.Rate,
 		HBins:       task.Options.HBins,
 		HInterval:   task.Options.HInterval,

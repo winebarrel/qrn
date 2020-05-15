@@ -61,7 +61,7 @@ $ qrn -file data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
   "Finished": "2020-05-13T11:18:24.559912+09:00",
   "Elapsed": 10,
   "Queries": 189,
-  "NAgent": 4,
+  "NAgents": 4,
   "Rate": 5,
   "QPS": 18.287694303306097,
   "MaxQPS": 21,
