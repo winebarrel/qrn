@@ -32,7 +32,7 @@ type RecordReport struct {
 	Rate        int
 	QPS         float64
 	MaxQPS      float64
-	MidQPS      float64
+	MedianQPS   float64
 	ExpectedQPS int
 	Response    *tachymeter.Metrics
 }
@@ -165,13 +165,13 @@ func (recorder *Recorder) Report() *RecordReport {
 			return qpsHist[i] < qpsHist[j]
 		})
 
-		mid := len(qpsHist) / 2
-		midNext := mid + 1
+		median := len(qpsHist) / 2
+		medianNext := median + 1
 
 		if len(qpsHist)%2 == 0 {
-			report.MidQPS = (qpsHist[mid] + qpsHist[midNext]) / 2
+			report.MedianQPS = (qpsHist[median] + qpsHist[medianNext]) / 2
 		} else {
-			report.MidQPS = qpsHist[midNext]
+			report.MedianQPS = qpsHist[medianNext]
 		}
 	}
 
