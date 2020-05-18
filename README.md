@@ -137,7 +137,7 @@ for (var i = 0; i < 10; i++) {
 $ qrn  -script data.js -dsn root:@/ -nagents 8 -time 15 -rate 5
 ```
 
-## Output histogram HTML
+## Output Histogram HTML
 
 If the `-html` is added, the histogram HTML will be output.
 
