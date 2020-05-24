@@ -15,8 +15,6 @@ import (
 const ReportPeriod = 1
 const HTMLReportName = "qrn-%d.html"
 
-var spinner = []string{"|", "/", "-", "\\"}
-
 func init() {
 	log.SetFlags(log.LstdFlags)
 }
@@ -50,8 +48,11 @@ func main() {
 		log.Fatalf("task prepare error: %s", err)
 	}
 
-	recorder, err := task.Run(flags.Time, ReportPeriod*time.Second, withProgress(func(count int, qps float64, width int, spnr string) {
-		status := fmt.Sprintf("%s run %d queries (%.0f qps)", spnr, count, qps)
+	recorder, err := task.Run(flags.Time, ReportPeriod*time.Second, withProgress(func(count int, qps float64, width int, elapsed time.Duration) {
+		d := elapsed.Round(time.Second)
+		m := d / time.Minute
+		s := (d - m*time.Minute) / time.Second
+		status := fmt.Sprintf("%02d:%02d run %d queries (%.0f qps)", m, s, count, qps)
 		fmt.Fprintf(os.Stderr, "\r%-*s", width, status)
 	}))
 
@@ -68,17 +69,16 @@ func main() {
 	}
 }
 
-func withProgress(block func(int, float64, int, string)) func(*qrn.Recorder) {
-	s := spinner[0:]
+func withProgress(block func(int, float64, int, time.Duration)) func(*qrn.Recorder) {
+	start := time.Now()
 	prev := 0
 
 	return func(r *qrn.Recorder) {
 		count := r.Count()
 		qps := float64(count-prev) / ReportPeriod
-		spnr := s[0]
-		s = append(s[1:], spnr)
+		elapsed := time.Now().Sub(start)
 		width, _, _ := terminal.GetSize(0)
-		block(count, qps, width, spnr)
+		block(count, qps, width, elapsed)
 		prev = count
 	}
 }
