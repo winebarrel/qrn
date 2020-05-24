@@ -23,6 +23,7 @@ type TaskOptions struct {
 	HBins       int
 	HInterval   time.Duration
 	QPSInterval time.Duration
+	Logger      *Logger
 }
 
 func NewTask(options *TaskOptions) (*Task, error) {
@@ -46,6 +47,7 @@ func NewTask(options *TaskOptions) (*Task, error) {
 		agents[i] = &Agent{
 			ConnInfo: connInfo,
 			Data:     data,
+			Logger:   options.Logger,
 		}
 	}
 

@@ -5,3 +5,4 @@
 *.gz
 *.sha1sum
 *.js
+*.log

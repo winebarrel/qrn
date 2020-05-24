@@ -20,6 +20,7 @@ type Agent struct {
 	ConnInfo *ConnInfo
 	DB       *sql.DB
 	Data     *Data
+	Logger   *Logger
 }
 
 func (agent *Agent) Prepare() error {
@@ -68,6 +69,8 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 			if err != nil {
 				return false, err
 			}
+
+			agent.Logger.Log(query, rt)
 
 			responseTimes = append(responseTimes, DataPoint{
 				Time:         time.Now(),
