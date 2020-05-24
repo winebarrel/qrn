@@ -34,6 +34,7 @@ func parseFlags() (flags *Flags) {
 	argTime := flag.Int("time", DefaultTime, "test run time (sec)")
 	flag.StringVar(&flags.TaskOptions.File, "data", "", "file path of execution queries")
 	flag.StringVar(&flags.Script, "script", "", "file path of execution script")
+	log := flag.String("log", "", "file path of query log")
 	flag.IntVar(&flags.TaskOptions.Rate, "rate", 0, "rate limit for each agent (qps). zero is unlimited")
 	qpsinterval := flag.Int("qpsinterval", DefaultQPSInterval, "QPS interval (sec)")
 	flag.StringVar(&flags.TaskOptions.Key, "key", DefaultJsonKey, "json key of query")
@@ -102,6 +103,21 @@ func parseFlags() (flags *Flags) {
 		printErrorAndExit(err.Error())
 	} else {
 		flags.TaskOptions.HInterval = hi
+	}
+
+	if *log == "" {
+		devNull := &qrn.ClosableDiscard{}
+		logger := qrn.NewLogger(devNull)
+		flags.TaskOptions.Logger = logger
+	} else {
+		file, err := os.OpenFile(*log, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+
+		if err != nil {
+			printErrorAndExit(err.Error())
+		}
+
+		logger := qrn.NewLogger(file)
+		flags.TaskOptions.Logger = logger
 	}
 
 	return

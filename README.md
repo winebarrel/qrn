@@ -21,6 +21,8 @@ Usage of ./qrn:
     	output histogram html
   -key string
     	json key of query (default "query")
+  -log string
+    	file path of query log
   -loop
     	input data loop flag (default true)
   -nagents int
