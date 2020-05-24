@@ -9,8 +9,8 @@ import (
 )
 
 type QueryLog struct {
-	Query string
-	Time  time.Duration
+	Query string        `json:"query"`
+	Time  time.Duration `json:"time"`
 }
 
 type Logger struct {
