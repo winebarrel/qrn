@@ -76,7 +76,7 @@ func withProgress(block func(int, float64, int, time.Duration)) func(*qrn.Record
 	return func(r *qrn.Recorder) {
 		count := r.Count()
 		qps := float64(count-prev) / ReportPeriod
-		elapsed := time.Now().Sub(start)
+		elapsed := time.Since(start)
 		width, _, _ := terminal.GetSize(0)
 		block(count, qps, width, elapsed)
 		prev = count
