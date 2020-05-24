@@ -1,7 +1,6 @@
 # qrn
 
 qrn is a database benchmarking tool.
-Currently only MySQL is supported.
 
 ## Usage
 
@@ -9,6 +8,8 @@ Currently only MySQL is supported.
 Usage of ./qrn:
   -data string
     	file path of execution queries
+  -driver string
+    	database driver (default "mysql")
   -dsn string
     	data source name
   -hbins int
@@ -152,3 +153,8 @@ output qrn-1589336606.html
 ```
 
 ![](https://user-images.githubusercontent.com/117768/82013568-93bb6400-96b5-11ea-9001-cde7e2e50484.png)
+
+## Related Links
+
+* https://github.com/go-sql-driver/mysql
+* https://github.com/lib/pq

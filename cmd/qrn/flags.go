@@ -11,6 +11,7 @@ import (
 
 var version string
 
+const DefaultDriver = "mysql"
 const DefaultTime = 60
 const DefaultJsonKey = "query"
 const DefaultHBins = 10
@@ -29,6 +30,7 @@ func parseFlags() (flags *Flags) {
 		TaskOptions: &qrn.TaskOptions{},
 	}
 
+	flag.StringVar(&flags.TaskOptions.Driver, "driver", DefaultDriver, "database driver")
 	flag.StringVar(&flags.TaskOptions.DSN, "dsn", "", "data source name")
 	flag.IntVar(&flags.TaskOptions.NAgents, "nagents", 1, "number of agents")
 	argTime := flag.Int("time", DefaultTime, "test run time (sec)")

@@ -13,6 +13,7 @@ type Task struct {
 }
 
 type TaskOptions struct {
+	Driver      string
 	DSN         string
 	NAgents     int
 	Rate        int
@@ -30,7 +31,7 @@ func NewTask(options *TaskOptions) (*Task, error) {
 	agents := make([]*Agent, options.NAgents)
 
 	connInfo := &ConnInfo{
-		Driver:       "mysql",
+		Driver:       options.Driver,
 		DSN:          options.DSN,
 		MaxIdleConns: options.NAgents,
 	}
