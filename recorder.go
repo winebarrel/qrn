@@ -12,6 +12,7 @@ type Recorder struct {
 	sync.Mutex
 	Channel       chan []DataPoint
 	ResponseTimes []DataPoint
+	DSN           string
 	Started       time.Time
 	Finished      time.Time
 	Metrics       *tachymeter.Metrics
@@ -24,6 +25,7 @@ type Recorder struct {
 }
 
 type RecordReport struct {
+	DSN         string
 	Started     time.Time
 	Finished    time.Time
 	Elapsed     time.Duration
@@ -141,6 +143,7 @@ func (recorder *Recorder) Report() *RecordReport {
 	qpsHist := recorder.QPSHistory[1:]
 
 	report := &RecordReport{
+		DSN:         recorder.DSN,
 		Started:     recorder.Started,
 		Finished:    recorder.Finished,
 		Elapsed:     nanoElapsed / time.Second,
