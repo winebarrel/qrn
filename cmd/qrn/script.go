@@ -57,3 +57,22 @@ func evalScript(path string) (string, error) {
 
 	return tmpfile.Name(), nil
 }
+
+func queryToFile(query string) (string, error) {
+	tmpfile, err := ioutil.TempFile("", "qrn.*.jsonl")
+
+	if err != nil {
+		return tmpfile.Name(), err
+	}
+
+	defer tmpfile.Close()
+
+	writer := bufio.NewWriter(tmpfile)
+
+	rawLine := JSONLine{Query: query}
+	line, _ := jsoniter.MarshalToString(rawLine)
+	fmt.Fprintln(writer, line)
+	writer.Flush()
+
+	return tmpfile.Name(), nil
+}

@@ -22,8 +22,17 @@ func init() {
 func main() {
 	flags := parseFlags()
 
-	if flags.Script != "" {
-		path, err := evalScript(flags.Script)
+	if flags.Script != "" || flags.Query != "" {
+		var path string
+		var err error
+
+		if flags.Script != "" {
+			path, err = evalScript(flags.Script)
+		}
+
+		if flags.Query != "" {
+			path, err = queryToFile(flags.Query)
+		}
 
 		if path != "" {
 			defer os.Remove(path)

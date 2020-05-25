@@ -22,6 +22,7 @@ type Flags struct {
 	Histogram   bool
 	HTML        bool
 	Script      string
+	Query       string
 	TaskOptions *qrn.TaskOptions
 }
 
@@ -36,6 +37,7 @@ func parseFlags() (flags *Flags) {
 	argTime := flag.Int("time", DefaultTime, "test run time (sec)")
 	flag.StringVar(&flags.TaskOptions.File, "data", "", "file path of execution queries")
 	flag.StringVar(&flags.Script, "script", "", "file path of execution script")
+	flag.StringVar(&flags.Query, "query", "", "execution query")
 	log := flag.String("log", "", "file path of query log")
 	flag.IntVar(&flags.TaskOptions.Rate, "rate", 0, "rate limit for each agent (qps). zero is unlimited")
 	qpsinterval := flag.Int("qpsinterval", DefaultQPSInterval, "QPS interval (sec)")
@@ -83,10 +85,10 @@ func parseFlags() (flags *Flags) {
 
 	flags.TaskOptions.QPSInterval = time.Duration(*qpsinterval) * time.Second
 
-	if flags.TaskOptions.File == "" && flags.Script == "" {
-		printErrorAndExit("'-data' or '-script' is required")
-	} else if flags.TaskOptions.File != "" && flags.Script != "" {
-		printErrorAndExit("cannot specify both '-data' and '-script'")
+	if flags.TaskOptions.File == "" && flags.Script == "" && flags.Query == "" {
+		printErrorAndExit("'-data' or '-script' or '-query' is required")
+	} else if (flags.TaskOptions.File != "" && flags.Script != "") || (flags.TaskOptions.File != "" && flags.Query != "") || (flags.Script != "" && flags.Query != "") {
+		printErrorAndExit("please specify one of '-data', '-script' or '-query'")
 	}
 
 	if flags.TaskOptions.Key == "" {

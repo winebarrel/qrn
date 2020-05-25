@@ -30,6 +30,8 @@ Usage of ./qrn:
     	number of agents (default 1)
   -qpsinterval int
     	QPS interval (sec) (default 1)
+  -query string
+    	execution query
   -random
     	randomize the start position of input data (default true)
   -rate int
