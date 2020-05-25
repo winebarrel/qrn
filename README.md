@@ -150,7 +150,7 @@ If the `-html` is added, the histogram HTML will be output.
 
 ```
 $ qrn -data data.jsonl -dsn root:@/ -nagents 8 -time 15 -html -hinterval 5ms -html
-- run 654003 queries (78425 qps)
+00:07 run 654003 queries (78425 qps)
 ...
 
 output qrn-1589336606.html
