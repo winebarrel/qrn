@@ -127,7 +127,8 @@ $ qrn -file data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
 
 ## DSN Examples
 
-see https://github.com/go-sql-driver/mysql#examples
+* https://github.com/go-sql-driver/mysql#examples
+* https://godoc.org/github.com/lib/pq
 
 ## Use Script as Data
 
@@ -153,8 +154,3 @@ output qrn-1589336606.html
 ```
 
 ![](https://user-images.githubusercontent.com/117768/82013568-93bb6400-96b5-11ea-9001-cde7e2e50484.png)
-
-## Related Links
-
-* https://github.com/go-sql-driver/mysql
-* https://github.com/lib/pq
