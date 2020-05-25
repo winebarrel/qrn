@@ -48,8 +48,8 @@ Usage of ./qrn:
 $ echo '{"query":"select 1"}' >> data.jsonl
 $ echo '{"query":"select 2"}' >> data.jsonl
 $ echo '{"query":"select 3"}' >> data.jsonl
-$ qrn -file data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
-/ run 184 queries (20 qps)
+$ qrn -data data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
+00:07 run 184 queries (20 qps)
 
           57µs - 115µs -
          115µs - 173µs -
