@@ -137,7 +137,7 @@ for (var i = 0; i < 10; i++) {
   query("select " + i);
 }
 
-$ qrn  -script data.js -dsn root:@/ -nagents 8 -time 15 -rate 5
+$ qrn -script data.js -dsn root:@/ -nagents 8 -time 15 -rate 5
 ```
 
 ## Output Histogram HTML
