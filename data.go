@@ -2,6 +2,7 @@ package qrn
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"math/rand"
 	"os"
@@ -72,13 +73,13 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 			if err == io.EOF {
 				break
 			} else if err != nil {
-				return err
+				return fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
 			}
 
 			json, err := parser.ParseBytes(line)
 
 			if err != nil {
-				return err
+				return fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
 			}
 
 			rawQuery := json.GetStringBytes(data.Key)
@@ -86,6 +87,10 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 			cont, err := block(query)
 
 			if !cont || err != nil {
+				if err != nil {
+					err = fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+				}
+
 				return err
 			}
 
