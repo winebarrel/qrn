@@ -56,7 +56,7 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 	reader := bufio.NewReader(file)
 
 	if data.Random {
-		reader.ReadLine()
+		LongReadLine(reader)
 	}
 
 	ticker := time.NewTicker(ThrottleInterrupt)
@@ -68,7 +68,7 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 
 	for {
 		for {
-			line, _, err := reader.ReadLine()
+			line, err := LongReadLine(reader)
 
 			if err == io.EOF {
 				break
