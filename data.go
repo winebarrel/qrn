@@ -52,10 +52,10 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 		originLimit = time.Second / time.Duration(data.Rate+1)
 	}
 
-	scanner := bufio.NewScanner(file)
+	reader := bufio.NewReader(file)
 
 	if data.Random {
-		scanner.Scan()
+		reader.ReadLine()
 	}
 
 	ticker := time.NewTicker(ThrottleInterrupt)
@@ -66,8 +66,15 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 	throttleStart := time.Now()
 
 	for {
-		for scanner.Scan() {
-			line := scanner.Bytes()
+		for {
+			line, _, err := reader.ReadLine()
+
+			if err == io.EOF {
+				break
+			} else if err != nil {
+				return err
+			}
+
 			json, err := parser.ParseBytes(line)
 
 			if err != nil {
@@ -115,7 +122,7 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 			return err
 		}
 
-		scanner = bufio.NewScanner(file)
+		reader = bufio.NewReader(file)
 	}
 
 	return nil
