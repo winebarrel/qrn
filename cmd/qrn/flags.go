@@ -57,8 +57,6 @@ func parseFlags() (flags *Flags) {
 
 	if *argVersion {
 		printVersionAndEixt()
-		fmt.Fprintln(os.Stderr, version)
-		os.Exit(2)
 	}
 
 	if flags.TaskOptions.DSN == "" {
