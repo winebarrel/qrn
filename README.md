@@ -26,6 +26,8 @@ Usage of ./qrn:
     	file path of query log
   -loop
     	input data loop flag (default true)
+  -maxcount int
+    	maximum number of queries for each agent. zero is unlimited
   -nagents int
     	number of agents (default 1)
   -qpsinterval int
@@ -39,7 +41,7 @@ Usage of ./qrn:
   -script string
     	file path of execution script
   -time int
-    	test run time (sec) (default 60)
+    	test run time (sec). zero is unlimited (default 60)
   -version
     	Print version and exit
 ```
