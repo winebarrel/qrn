@@ -56,7 +56,7 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 	defer ticker.Stop()
 	responseTimes := []DataPoint{}
 
-	err := agent.Data.EachLine(func(query string) (bool, error) {
+	err := agent.Data.EachLine(func(query string, params []string) (bool, error) {
 		select {
 		case <-ctx.Done():
 			return false, nil
@@ -67,13 +67,13 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 			// nothing to do
 		}
 
-		rt, err := agent.Query(query)
+		rt, err := agent.Query(query, params)
 
 		if err != nil {
 			return false, err
 		}
 
-		agent.Logger.Log(query, rt)
+		agent.Logger.Log(query, params, rt)
 
 		responseTimes = append(responseTimes, DataPoint{
 			Time:         time.Now(),
@@ -87,9 +87,15 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 	return err
 }
 
-func (agent *Agent) Query(query string) (time.Duration, error) {
+func (agent *Agent) Query(query string, params []string) (time.Duration, error) {
+	ifParams := make([]interface{}, len(params))
+
+	for i, p := range params {
+		ifParams[i] = p
+	}
+
 	start := time.Now()
-	_, err := agent.DB.Exec(query)
+	_, err := agent.DB.Exec(query, ifParams...)
 	end := time.Now()
 
 	if err != nil {

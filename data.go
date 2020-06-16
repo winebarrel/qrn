@@ -16,13 +16,14 @@ const ThrottleInterrupt = 1 * time.Millisecond
 type Data struct {
 	Path     string
 	Key      string
+	ParamKey string
 	Loop     bool
 	Random   bool
 	Rate     int
 	MaxCount int64
 }
 
-func (data *Data) EachLine(block func(string) (bool, error)) error {
+func (data *Data) EachLine(block func(string, []string) (bool, error)) error {
 	file, err := os.OpenFile(data.Path, os.O_RDONLY, 0)
 
 	if err != nil {
@@ -78,22 +79,34 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 			if err == io.EOF {
 				break
 			} else if err != nil {
-				return fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+				return fmt.Errorf("%w: key=%s, param key=%s, json=%s", err, data.Key, data.ParamKey, string(line))
 			}
 
 			json, err := parser.ParseBytes(line)
 
 			if err != nil {
-				return fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+				return fmt.Errorf("%w: key=%s, param key=%s, json=%s", err, data.Key, data.ParamKey, (line))
 			}
 
 			rawQuery := json.GetStringBytes(data.Key)
 			query := string(rawQuery)
-			cont, err := block(query)
+			params := []string{}
+
+			if data.ParamKey != "" {
+				values := json.GetArray(data.ParamKey)
+				params = make([]string, len(values))
+
+				for i, v := range values {
+					valStr := string(v.GetStringBytes())
+					params[i] = valStr
+				}
+			}
+
+			cont, err := block(query, params)
 
 			if !cont || err != nil {
 				if err != nil {
-					err = fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+					err = fmt.Errorf("%w: key=%s, param key=%s, json=%s", err, data.Key, data.ParamKey, string(line))
 				}
 
 				return err

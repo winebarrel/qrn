@@ -32,6 +32,7 @@ type TaskOptions struct {
 	Rate        int
 	Files       Files
 	Key         string
+	ParamKey    string
 	Loop        bool
 	MaxCount    int64
 	Random      bool
@@ -57,6 +58,7 @@ func NewTask(options *TaskOptions) (*Task, error) {
 		data := &Data{
 			Path:     files[i%flen],
 			Key:      options.Key,
+			ParamKey: options.ParamKey,
 			Loop:     options.Loop,
 			Random:   options.Random,
 			Rate:     options.Rate,

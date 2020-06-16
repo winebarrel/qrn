@@ -30,6 +30,8 @@ Usage of ./qrn:
     	maximum number of queries for each agent. zero is unlimited
   -nagents int
     	number of agents
+  -paramkey string
+    	json key of parameter (default "params")
   -qpsinterval int
     	QPS interval (sec) (default 1)
   -query string
@@ -133,6 +135,20 @@ $ qrn -data data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
 
 * https://github.com/go-sql-driver/mysql#examples
 * https://github.com/jackc/pgx/blob/master/stdlib/sql.go
+
+## Use parameter
+
+```
+# MySQL
+$ echo '{"query":"select ?","params":["1"]}' > data.jsonl
+$ qrn ... -data data.jsonl
+
+# PostgreSQL
+$ echo '{"query":"select $1","params":["1"]}' > data.jsonl
+$ qrn ... -data data.jsonl
+```
+
+**Parameter type is string only.**
 
 ## Load different data for each agent
 

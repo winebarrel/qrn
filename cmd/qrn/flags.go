@@ -15,6 +15,7 @@ var version string
 const DefaultDriver = "mysql"
 const DefaultTime = 60
 const DefaultJsonKey = "query"
+const DefaultJsonParamKey = "params"
 const DefaultHBins = 10
 const DefaultQPSInterval = 1
 
@@ -63,6 +64,7 @@ func parseFlags() (flags *Flags) {
 	flag.IntVar(&flags.TaskOptions.Rate, "rate", 0, "rate limit for each agent (qps). zero is unlimited")
 	qpsinterval := flag.Int("qpsinterval", DefaultQPSInterval, "QPS interval (sec)")
 	flag.StringVar(&flags.TaskOptions.Key, "key", DefaultJsonKey, "json key of query")
+	flag.StringVar(&flags.TaskOptions.ParamKey, "paramkey", DefaultJsonParamKey, "json key of parameter")
 	flag.BoolVar(&flags.TaskOptions.Loop, "loop", true, "input data loop flag")
 	flag.Int64Var(&flags.TaskOptions.MaxCount, "maxcount", 0, "maximum number of queries for each agent. zero is unlimited")
 	flag.Var(&random, "random", "randomize the start position of input data")
@@ -127,6 +129,7 @@ func parseFlags() (flags *Flags) {
 
 	if flags.Query != "" {
 		flags.TaskOptions.Key = DefaultJsonKey
+		flags.TaskOptions.ParamKey = DefaultJsonParamKey
 	}
 
 	if random.set {
