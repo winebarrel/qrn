@@ -34,7 +34,7 @@ func parseFlags() (flags *Flags) {
 	flag.StringVar(&flags.TaskOptions.Driver, "driver", DefaultDriver, "database driver")
 	flag.StringVar(&flags.TaskOptions.DSN, "dsn", "", "data source name")
 	flag.IntVar(&flags.TaskOptions.NAgents, "nagents", 1, "number of agents")
-	argTime := flag.Int("time", DefaultTime, "test run time (sec)")
+	argTime := flag.Int("time", DefaultTime, "test run time (sec). zero is unlimited")
 	flag.StringVar(&flags.TaskOptions.File, "data", "", "file path of execution queries")
 	flag.StringVar(&flags.Script, "script", "", "file path of execution script")
 	flag.StringVar(&flags.Query, "query", "", "execution query")
@@ -43,6 +43,7 @@ func parseFlags() (flags *Flags) {
 	qpsinterval := flag.Int("qpsinterval", DefaultQPSInterval, "QPS interval (sec)")
 	flag.StringVar(&flags.TaskOptions.Key, "key", DefaultJsonKey, "json key of query")
 	flag.BoolVar(&flags.TaskOptions.Loop, "loop", true, "input data loop flag")
+	flag.Int64Var(&flags.TaskOptions.MaxCount, "maxcount", 0, "maximum number of queries for each agent. zero is unlimited")
 	flag.BoolVar(&flags.TaskOptions.Random, "random", true, "randomize the start position of input data")
 	flag.IntVar(&flags.TaskOptions.HBins, "hbins", DefaultHBins, "histogram bins")
 	hinterval := flag.String("hinterval", "0", "histogram interval")
@@ -67,8 +68,8 @@ func parseFlags() (flags *Flags) {
 		printErrorAndExit("'-nagents' must be >= 1")
 	}
 
-	if *argTime < 1 {
-		printErrorAndExit("'-time' must be >= 1")
+	if *argTime < 0 {
+		printErrorAndExit("'-time' must be >= 0")
 	}
 
 	flags.Time = time.Duration(*argTime) * time.Second
@@ -79,6 +80,10 @@ func parseFlags() (flags *Flags) {
 
 	if *qpsinterval < 1 {
 		printErrorAndExit("'-rate' must be >= 1")
+	}
+
+	if flags.TaskOptions.MaxCount < 0 {
+		printErrorAndExit("'-maxcount' must be >= 0")
 	}
 
 	flags.TaskOptions.QPSInterval = time.Duration(*qpsinterval) * time.Second

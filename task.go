@@ -20,6 +20,7 @@ type TaskOptions struct {
 	File        string
 	Key         string
 	Loop        bool
+	MaxCount    int64
 	Random      bool
 	HBins       int
 	HInterval   time.Duration
@@ -38,11 +39,12 @@ func NewTask(options *TaskOptions) (*Task, error) {
 
 	for i := 0; i < options.NAgents; i++ {
 		data := &Data{
-			Path:   options.File,
-			Key:    options.Key,
-			Loop:   options.Loop,
-			Random: options.Random,
-			Rate:   options.Rate,
+			Path:     options.File,
+			Key:      options.Key,
+			Loop:     options.Loop,
+			Random:   options.Random,
+			Rate:     options.Rate,
+			MaxCount: options.MaxCount,
 		}
 
 		agents[i] = &Agent{
@@ -112,16 +114,19 @@ func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*
 		}
 	}()
 
-	eg.Go(func() error {
-		select {
-		case <-ctx.Done():
-			// nothing to do
-		case <-time.After(n):
-			cancel()
-		}
+	if n > 0 {
+		go func() {
+			select {
+			case <-ctx.Done():
+				// nothing to do
+			case <-time.After(n):
+				cancel()
+			}
+		}()
+	}
 
-		return nil
-	})
+	err := eg.Wait()
+	cancel()
 
-	return recorder, eg.Wait()
+	return recorder, err
 }

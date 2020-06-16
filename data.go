@@ -14,11 +14,12 @@ import (
 const ThrottleInterrupt = 1 * time.Millisecond
 
 type Data struct {
-	Path   string
-	Key    string
-	Loop   bool
-	Random bool
-	Rate   int
+	Path     string
+	Key      string
+	Loop     bool
+	Random   bool
+	Rate     int
+	MaxCount int64
 }
 
 func (data *Data) EachLine(block func(string) (bool, error)) error {
@@ -56,14 +57,18 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 	reader := bufio.NewReader(file)
 
 	if data.Random {
-		LongReadLine(reader)
+		_, err := LongReadLine(reader)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	ticker := time.NewTicker(ThrottleInterrupt)
 	defer ticker.Stop()
 	start := time.Now()
 	limit := originLimit
-	var tx int64 = 0
+	var tx, totalTx int64
 	throttleStart := time.Now()
 
 	for {
@@ -95,6 +100,11 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 			}
 
 			tx++
+			totalTx++
+
+			if data.MaxCount > 0 && totalTx >= data.MaxCount {
+				return nil
+			}
 
 			select {
 			case <-ticker.C:

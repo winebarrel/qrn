@@ -140,6 +140,11 @@ func (recorder *Recorder) Count() int {
 func (recorder *Recorder) Report() *RecordReport {
 	nanoElapsed := recorder.Finished.Sub(recorder.Started)
 	count := recorder.Count()
+
+	if len(recorder.QPSHistory) < 1 {
+		return &RecordReport{}
+	}
+
 	qpsHist := recorder.QPSHistory[1:]
 
 	report := &RecordReport{
