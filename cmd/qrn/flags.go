@@ -33,12 +33,12 @@ func parseFlags() (flags *Flags) {
 
 	flag.StringVar(&flags.TaskOptions.Driver, "driver", DefaultDriver, "database driver")
 	flag.StringVar(&flags.TaskOptions.DSN, "dsn", "", "data source name")
-	flag.IntVar(&flags.TaskOptions.NAgents, "nagents", 1, "number of agents")
+	flag.IntVar(&flags.TaskOptions.NAgents, "nagents", 0, "number of agents")
 	argTime := flag.Int("time", DefaultTime, "test run time (sec). zero is unlimited")
 	flag.Var(&flags.TaskOptions.Files, "data", "file path of execution queries for each agent")
 	flag.StringVar(&flags.Script, "script", "", "file path of execution script")
 	flag.StringVar(&flags.Query, "query", "", "execution query")
-	log := flag.String("log", "", "file path of query log")
+	logOpt := flag.String("log", "", "file path of query log")
 	flag.IntVar(&flags.TaskOptions.Rate, "rate", 0, "rate limit for each agent (qps). zero is unlimited")
 	qpsinterval := flag.Int("qpsinterval", DefaultQPSInterval, "QPS interval (sec)")
 	flag.StringVar(&flags.TaskOptions.Key, "key", DefaultJsonKey, "json key of query")
@@ -51,6 +51,8 @@ func parseFlags() (flags *Flags) {
 	flag.BoolVar(&flags.HTML, "html", false, "output histogram html")
 	argVersion := flag.Bool("version", false, "Print version and exit")
 	flag.Parse()
+
+	flen := len(flags.TaskOptions.Files)
 
 	if flag.NFlag() == 0 {
 		printUsageAndExit()
@@ -65,7 +67,11 @@ func parseFlags() (flags *Flags) {
 	}
 
 	if flags.TaskOptions.NAgents < 1 {
-		printErrorAndExit("'-nagents' must be >= 1")
+		if flen > 1 {
+			flags.TaskOptions.NAgents = flen
+		} else {
+			flags.TaskOptions.NAgents = 1
+		}
 	}
 
 	if *argTime < 0 {
@@ -87,7 +93,6 @@ func parseFlags() (flags *Flags) {
 	}
 
 	flags.TaskOptions.QPSInterval = time.Duration(*qpsinterval) * time.Second
-	flen := len(flags.TaskOptions.Files)
 
 	if flen == 0 && flags.Script == "" && flags.Query == "" {
 		printErrorAndExit("'-data' or '-script' or '-query' is required")
@@ -113,12 +118,12 @@ func parseFlags() (flags *Flags) {
 		flags.TaskOptions.HInterval = hi
 	}
 
-	if *log == "" {
+	if *logOpt == "" {
 		devNull := &qrn.ClosableDiscard{}
 		logger := qrn.NewLogger(devNull)
 		flags.TaskOptions.Logger = logger
 	} else {
-		file, err := os.OpenFile(*log, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+		file, err := os.OpenFile(*logOpt, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 
 		if err != nil {
 			printErrorAndExit(err.Error())
