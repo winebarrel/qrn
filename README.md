@@ -51,7 +51,7 @@ $ echo '{"query":"select 1"}' >> data.jsonl
 $ echo '{"query":"select 2"}' >> data.jsonl
 $ echo '{"query":"select 3"}' >> data.jsonl
 $ qrn -data data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
-00:07 run 184 queries (20 qps)
+00:07 | 4 agents / run 184 queries (20 qps)
 
           57µs - 115µs -
          115µs - 173µs -
@@ -160,7 +160,7 @@ If the `-html` is added, the histogram HTML will be output.
 
 ```
 $ qrn -data data.jsonl -dsn root:@/ -nagents 8 -time 15 -html -hinterval 5ms -html
-00:07 run 654003 queries (78425 qps)
+00:07 | 1 agents / run 654003 queries (78425 qps)
 ...
 
 output qrn-1589336606.html
