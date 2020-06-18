@@ -34,6 +34,7 @@ type RecordReport struct {
 	Rate        int
 	QPS         float64
 	MaxQPS      float64
+	MinQPS      float64
 	MedianQPS   float64
 	ExpectedQPS int
 	Response    *tachymeter.Metrics
@@ -162,10 +163,15 @@ func (recorder *Recorder) Report() *RecordReport {
 
 	if len(qpsHist) > 0 {
 		report.MaxQPS = qpsHist[0]
+		report.MinQPS = qpsHist[0]
 
 		for _, v := range qpsHist {
 			if v > report.MaxQPS {
 				report.MaxQPS = v
+			}
+
+			if v < report.MinQPS {
+				report.MinQPS = v
 			}
 		}
 
