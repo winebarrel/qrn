@@ -146,6 +146,14 @@ for (var i = 0; i < 10; i++) {
 $ qrn -script data.js -dsn root:@/ -nagents 8 -time 15 -rate 5
 ```
 
+## Load different data for each agent
+
+```
+$ echo '{"query":"select 1"}' >> data1.jsonl
+$ echo '{"query":"select 2"}' >> data2.jsonl
+$ qrn -data data1.jsonl -data data2.json -dsn root:@/ -rate 5 -time 10 -histogram # -nagents 2
+```
+
 ## Output Histogram HTML
 
 If the `-html` is added, the histogram HTML will be output.
