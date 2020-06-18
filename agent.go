@@ -59,29 +59,31 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 	err := agent.Data.EachLine(func(query string) (bool, error) {
 		select {
 		case <-ctx.Done():
-			recorder.Add(responseTimes)
 			return false, nil
 		case <-ticker.C:
 			recorder.Add(responseTimes)
 			responseTimes = responseTimes[:0]
 		default:
-			rt, err := agent.Query(query)
-
-			if err != nil {
-				return false, err
-			}
-
-			agent.Logger.Log(query, rt)
-
-			responseTimes = append(responseTimes, DataPoint{
-				Time:         time.Now(),
-				ResponseTime: rt,
-			})
+			// nothing to do
 		}
+
+		rt, err := agent.Query(query)
+
+		if err != nil {
+			return false, err
+		}
+
+		agent.Logger.Log(query, rt)
+
+		responseTimes = append(responseTimes, DataPoint{
+			Time:         time.Now(),
+			ResponseTime: rt,
+		})
 
 		return true, nil
 	})
 
+	recorder.Add(responseTimes)
 	return err
 }
 
