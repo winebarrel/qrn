@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"qrn"
+	"strconv"
 	"time"
 )
 
@@ -26,10 +27,32 @@ type Flags struct {
 	TaskOptions *qrn.TaskOptions
 }
 
+type xBool struct {
+	set   bool
+	value bool
+}
+
+func (b *xBool) String() string {
+	return strconv.FormatBool(b.value)
+}
+
+func (b *xBool) Set(s string) error {
+	v, err := strconv.ParseBool(s)
+
+	if err != nil {
+		return err
+	}
+
+	*b = xBool{true, v}
+	return nil
+}
+
 func parseFlags() (flags *Flags) {
 	flags = &Flags{
 		TaskOptions: &qrn.TaskOptions{},
 	}
+
+	var random xBool
 
 	flag.StringVar(&flags.TaskOptions.Driver, "driver", DefaultDriver, "database driver")
 	flag.StringVar(&flags.TaskOptions.DSN, "dsn", "", "data source name")
@@ -44,7 +67,7 @@ func parseFlags() (flags *Flags) {
 	flag.StringVar(&flags.TaskOptions.Key, "key", DefaultJsonKey, "json key of query")
 	flag.BoolVar(&flags.TaskOptions.Loop, "loop", true, "input data loop flag")
 	flag.Int64Var(&flags.TaskOptions.MaxCount, "maxcount", 0, "maximum number of queries for each agent. zero is unlimited")
-	flag.BoolVar(&flags.TaskOptions.Random, "random", true, "randomize the start position of input data")
+	flag.Var(&random, "random", "randomize the start position of input data")
 	flag.IntVar(&flags.TaskOptions.HBins, "hbins", DefaultHBins, "histogram bins")
 	hinterval := flag.String("hinterval", "0", "histogram interval")
 	flag.BoolVar(&flags.Histogram, "histogram", false, "show histogram")
@@ -106,6 +129,14 @@ func parseFlags() (flags *Flags) {
 
 	if flags.Script != "" || flags.Query != "" {
 		flags.TaskOptions.Key = DefaultJsonKey
+	}
+
+	if random.set {
+		flags.TaskOptions.Random = random.value
+	} else if flags.TaskOptions.Loop {
+		flags.TaskOptions.Random = true
+	} else {
+		flags.TaskOptions.Random = false
 	}
 
 	if flags.TaskOptions.Random {
