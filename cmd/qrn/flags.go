@@ -98,7 +98,7 @@ func parseFlags() (flags *Flags) {
 		printErrorAndExit("'-key' dose not allow empty")
 	}
 
-	if flags.Script != "" {
+	if flags.Script != "" || flags.Query != "" {
 		flags.TaskOptions.Key = DefaultJsonKey
 	}
 
