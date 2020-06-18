@@ -42,7 +42,7 @@ func main() {
 			log.Fatalf("script error: %s", err)
 		}
 
-		flags.TaskOptions.File = path
+		flags.TaskOptions.Files = qrn.Files{path}
 	}
 
 	task, err := qrn.NewTask(flags.TaskOptions)

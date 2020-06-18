@@ -6,8 +6,8 @@ qrn is a database benchmarking tool.
 
 ```
 Usage of ./qrn:
-  -data string
-    	file path of execution queries
+  -data value
+    	file path of execution queries for each agent
   -driver string
     	database driver (default "mysql")
   -dsn string

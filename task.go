@@ -2,6 +2,7 @@ package qrn
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"golang.org/x/sync/errgroup"
@@ -12,12 +13,23 @@ type Task struct {
 	Options *TaskOptions
 }
 
+type Files []string
+
+func (files *Files) String() string {
+	return fmt.Sprintf("%v", *files)
+}
+
+func (files *Files) Set(f string) error {
+	*files = append(*files, f)
+	return nil
+}
+
 type TaskOptions struct {
 	Driver      string
 	DSN         string
 	NAgents     int
 	Rate        int
-	File        string
+	Files       Files
 	Key         string
 	Loop        bool
 	MaxCount    int64
@@ -37,9 +49,12 @@ func NewTask(options *TaskOptions) (*Task, error) {
 		MaxIdleConns: options.NAgents,
 	}
 
+	files := options.Files
+	flen := len(options.Files)
+
 	for i := 0; i < options.NAgents; i++ {
 		data := &Data{
-			Path:     options.File,
+			Path:     files[i%flen],
 			Key:      options.Key,
 			Loop:     options.Loop,
 			Random:   options.Random,
@@ -95,7 +110,8 @@ func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*
 	ticker := time.NewTicker(reportPeriod)
 	recorder.Start()
 
-	for _, agent := range task.Agents {
+	for _, v := range task.Agents {
+		agent := v
 		eg.Go(func() error {
 			err := agent.Run(ctxWithCancel, recorder)
 			return err

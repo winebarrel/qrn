@@ -35,7 +35,7 @@ func parseFlags() (flags *Flags) {
 	flag.StringVar(&flags.TaskOptions.DSN, "dsn", "", "data source name")
 	flag.IntVar(&flags.TaskOptions.NAgents, "nagents", 1, "number of agents")
 	argTime := flag.Int("time", DefaultTime, "test run time (sec). zero is unlimited")
-	flag.StringVar(&flags.TaskOptions.File, "data", "", "file path of execution queries")
+	flag.Var(&flags.TaskOptions.Files, "data", "file path of execution queries for each agent")
 	flag.StringVar(&flags.Script, "script", "", "file path of execution script")
 	flag.StringVar(&flags.Query, "query", "", "execution query")
 	log := flag.String("log", "", "file path of query log")
@@ -87,10 +87,11 @@ func parseFlags() (flags *Flags) {
 	}
 
 	flags.TaskOptions.QPSInterval = time.Duration(*qpsinterval) * time.Second
+	flen := len(flags.TaskOptions.Files)
 
-	if flags.TaskOptions.File == "" && flags.Script == "" && flags.Query == "" {
+	if flen == 0 && flags.Script == "" && flags.Query == "" {
 		printErrorAndExit("'-data' or '-script' or '-query' is required")
-	} else if (flags.TaskOptions.File != "" && flags.Script != "") || (flags.TaskOptions.File != "" && flags.Query != "") || (flags.Script != "" && flags.Query != "") {
+	} else if (flen != 0 && flags.Script != "") || (flen != 0 && flags.Query != "") || (flags.Script != "" && flags.Query != "") {
 		printErrorAndExit("please specify one of '-data', '-script' or '-query'")
 	}
 
