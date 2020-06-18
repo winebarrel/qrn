@@ -57,11 +57,11 @@ func main() {
 		log.Fatalf("task prepare error: %s", err)
 	}
 
-	recorder, err := task.Run(flags.Time, ReportPeriod*time.Second, withProgress(func(count int, qps float64, width int, elapsed time.Duration) {
+	recorder, err := task.Run(flags.Time, ReportPeriod*time.Second, withProgress(func(count int, qps float64, width int, elapsed time.Duration, running int) {
 		d := elapsed.Round(time.Second)
 		m := d / time.Minute
 		s := (d - m*time.Minute) / time.Second
-		status := fmt.Sprintf("%02d:%02d run %d queries (%.0f qps)", m, s, count, qps)
+		status := fmt.Sprintf("%02d:%02d | %d agents / run %d queries (%.0f qps)", m, s, running, count, qps)
 		fmt.Fprintf(os.Stderr, "\r%-*s", width, status)
 	}))
 
@@ -78,16 +78,16 @@ func main() {
 	}
 }
 
-func withProgress(block func(int, float64, int, time.Duration)) func(*qrn.Recorder) {
+func withProgress(block func(int, float64, int, time.Duration, int)) func(*qrn.Recorder, int) {
 	start := time.Now()
 	prev := 0
 
-	return func(r *qrn.Recorder) {
+	return func(r *qrn.Recorder, running int) {
 		count := r.Count()
 		qps := float64(count-prev) / ReportPeriod
 		elapsed := time.Since(start)
 		width, _, _ := terminal.GetSize(0)
-		block(count, qps, width, elapsed)
+		block(count, qps, width, elapsed, running)
 		prev = count
 	}
 }

@@ -3,6 +3,7 @@ package qrn
 import (
 	"context"
 	"fmt"
+	"sync/atomic"
 	"time"
 
 	"golang.org/x/sync/errgroup"
@@ -87,7 +88,7 @@ func (task *Task) Prepare() error {
 	return nil
 }
 
-func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*Recorder)) (*Recorder, error) {
+func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*Recorder, int)) (*Recorder, error) {
 	recorder := &Recorder{
 		DSN:         task.Options.DSN,
 		NAgents:     task.Options.NAgents,
@@ -109,11 +110,13 @@ func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*
 	ctxWithCancel, cancel := context.WithCancel(ctx)
 	ticker := time.NewTicker(reportPeriod)
 	recorder.Start()
+	var doneCnt int32
 
 	for _, v := range task.Agents {
 		agent := v
 		eg.Go(func() error {
 			err := agent.Run(ctxWithCancel, recorder)
+			atomic.AddInt32(&doneCnt, 1)
 			return err
 		})
 	}
@@ -125,7 +128,7 @@ func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*
 			case <-ctx.Done():
 				break LOOP
 			case <-ticker.C:
-				report(recorder)
+				report(recorder, task.Options.NAgents-int(doneCnt))
 			}
 		}
 	}()
