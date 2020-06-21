@@ -22,24 +22,15 @@ func init() {
 func main() {
 	flags := parseFlags()
 
-	if flags.Script != "" || flags.Query != "" {
-		var path string
-		var err error
-
-		if flags.Script != "" {
-			path, err = evalScript(flags.Script)
-		}
-
-		if flags.Query != "" {
-			path, err = queryToFile(flags.Query)
-		}
+	if flags.Query != "" {
+		path, err := queryToFile(flags.Query)
 
 		if path != "" {
 			defer os.Remove(path)
 		}
 
 		if err != nil {
-			log.Fatalf("script error: %s", err)
+			log.Fatalf("query error: %s", err)
 		}
 
 		flags.TaskOptions.Files = qrn.Files{path}
