@@ -29,17 +29,15 @@ Usage of ./qrn:
   -maxcount int
     	maximum number of queries for each agent. zero is unlimited
   -nagents int
-    	number of agents (default 1)
+    	number of agents
   -qpsinterval int
     	QPS interval (sec) (default 1)
   -query string
     	execution query
-  -random
-    	randomize the start position of input data (default true)
+  -random value
+    	randomize the start position of input data
   -rate int
     	rate limit for each agent (qps). zero is unlimited
-  -script string
-    	file path of execution script
   -time int
     	test run time (sec). zero is unlimited (default 60)
   -version
@@ -135,17 +133,6 @@ $ qrn -data data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
 
 * https://github.com/go-sql-driver/mysql#examples
 * https://github.com/jackc/pgx/blob/master/stdlib/sql.go
-
-## Use Script as Data
-
-```
-$ cat data.js
-for (var i = 0; i < 10; i++) {
-  query("select " + i);
-}
-
-$ qrn -script data.js -dsn root:@/ -nagents 8 -time 15 -rate 5
-```
 
 ## Load different data for each agent
 
