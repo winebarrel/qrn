@@ -15,6 +15,7 @@ type QueryLog struct {
 
 type Logger struct {
 	Channel chan QueryLog
+	Null    bool
 }
 
 type ClosableDiscard struct{}
@@ -27,17 +28,25 @@ func (_ *ClosableDiscard) Close() error {
 	return nil
 }
 
-func NewLogger(out io.WriteCloser) *Logger {
+func NewLogger(out io.WriteCloser, threshold time.Duration) *Logger {
+	switch out.(type) {
+	case *ClosableDiscard:
+		return &Logger{Null: true}
+	}
+
 	ch := make(chan QueryLog)
 
 	logger := &Logger{
 		Channel: ch,
+		Null:    false,
 	}
 
 	go func() {
 		for ql := range ch {
-			log, _ := jsoniter.MarshalToString(ql)
-			fmt.Fprintln(out, log)
+			if ql.Time >= threshold {
+				log, _ := jsoniter.MarshalToString(ql)
+				fmt.Fprintln(out, log)
+			}
 		}
 
 		out.Close()
@@ -47,6 +56,10 @@ func NewLogger(out io.WriteCloser) *Logger {
 }
 
 func (logger *Logger) Log(query string, time time.Duration) {
+	if logger.Null {
+		return
+	}
+
 	ql := QueryLog{
 		Query: query,
 		Time:  time,
