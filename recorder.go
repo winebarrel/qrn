@@ -10,6 +10,7 @@ import (
 
 type Recorder struct {
 	sync.Mutex
+	Files         []string
 	Channel       chan []DataPoint
 	ResponseTimes []DataPoint
 	DSN           string
@@ -26,6 +27,7 @@ type Recorder struct {
 
 type RecordReport struct {
 	DSN         string
+	Files       []string
 	Started     time.Time
 	Finished    time.Time
 	Elapsed     time.Duration
@@ -150,6 +152,7 @@ func (recorder *Recorder) Report() *RecordReport {
 
 	report := &RecordReport{
 		DSN:         recorder.DSN,
+		Files:       recorder.Files,
 		Started:     recorder.Started,
 		Finished:    recorder.Finished,
 		Elapsed:     nanoElapsed / time.Second,
@@ -182,7 +185,11 @@ func (recorder *Recorder) Report() *RecordReport {
 		median := len(qpsHist) / 2
 		medianNext := median + 1
 
-		if len(qpsHist)%2 == 0 {
+		if len(qpsHist) == 1 {
+			report.MedianQPS = qpsHist[0]
+		} else if len(qpsHist) == 2 {
+			report.MedianQPS = (qpsHist[0] + qpsHist[1]) / 2
+		} else if len(qpsHist)%2 == 0 {
 			report.MedianQPS = (qpsHist[median] + qpsHist[medianNext]) / 2
 		} else {
 			report.MedianQPS = qpsHist[medianNext]
