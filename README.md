@@ -12,6 +12,8 @@ Usage of ./qrn:
     	database driver (default "mysql")
   -dsn string
     	data source name
+  -force
+    	ignore query error
   -hbins int
     	histogram bins (default 10)
   -hinterval string
@@ -24,6 +26,8 @@ Usage of ./qrn:
     	json key of query (default "query")
   -log string
     	file path of query log
+  -logtime string
+    	execution time threshold for logged queries (default "0")
   -loop
     	input data loop flag (default true)
   -maxcount int
