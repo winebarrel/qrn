@@ -17,6 +17,7 @@ type Data struct {
 	Path     string
 	Key      string
 	Loop     bool
+	Force    bool
 	Random   bool
 	Rate     int
 	MaxCount int64
@@ -93,7 +94,15 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 
 			if !cont || err != nil {
 				if err != nil {
-					err = fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+					errmsg := fmt.Sprintf("key=%s, json=%s", data.Key, string(line))
+
+					if data.Force {
+						fmt.Fprintf(os.Stderr, "%s: %s", err, errmsg)
+						start = time.Now()
+						continue
+					} else {
+						err = fmt.Errorf("%w: %s", err, errmsg)
+					}
 				}
 
 				return err
