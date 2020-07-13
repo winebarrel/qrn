@@ -162,3 +162,7 @@ output qrn-1589336606.html
 ```
 
 ![](https://user-images.githubusercontent.com/117768/82013568-93bb6400-96b5-11ea-9001-cde7e2e50484.png)
+
+## Related Links
+
+* https://github.com/winebarrel/qrnlog
