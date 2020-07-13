@@ -64,6 +64,7 @@ func parseFlags() (flags *Flags) {
 	qpsinterval := flag.Int("qpsinterval", DefaultQPSInterval, "QPS interval (sec)")
 	flag.StringVar(&flags.TaskOptions.Key, "key", DefaultJsonKey, "json key of query")
 	flag.BoolVar(&flags.TaskOptions.Loop, "loop", true, "input data loop flag")
+	flag.BoolVar(&flags.TaskOptions.Force, "force", false, "ignore query error")
 	flag.Int64Var(&flags.TaskOptions.MaxCount, "maxcount", 0, "maximum number of queries for each agent. zero is unlimited")
 	flag.Var(&random, "random", "randomize the start position of input data")
 	flag.IntVar(&flags.TaskOptions.HBins, "hbins", DefaultHBins, "histogram bins")

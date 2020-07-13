@@ -33,6 +33,7 @@ type TaskOptions struct {
 	Files       Files
 	Key         string
 	Loop        bool
+	Force       bool
 	MaxCount    int64
 	Random      bool
 	HBins       int
@@ -58,6 +59,7 @@ func NewTask(options *TaskOptions) (*Task, error) {
 			Path:     files[i%flen],
 			Key:      options.Key,
 			Loop:     options.Loop,
+			Force:    options.Force,
 			Random:   options.Random,
 			Rate:     options.Rate,
 			MaxCount: options.MaxCount,
