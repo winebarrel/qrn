@@ -81,6 +81,7 @@ $ qrn -data data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
   "MinQPS": 18,
   "MedianQPS": 19,
   "ExpectedQPS": 20,
+  "LoopCount": 15894,
   "Response": {
     "Time": {
       "Cumulative": "78.389862ms",

@@ -19,6 +19,7 @@ type Recorder struct {
 	Metrics       *tachymeter.Metrics
 	NAgents       int
 	Rate          int
+	LoopCount     int64
 	HBins         int
 	HInterval     time.Duration
 	QPSHistory    []float64
@@ -39,6 +40,7 @@ type RecordReport struct {
 	MinQPS      float64
 	MedianQPS   float64
 	ExpectedQPS int
+	LoopCount   int64
 	Response    *tachymeter.Metrics
 }
 
@@ -161,6 +163,7 @@ func (recorder *Recorder) Report() *RecordReport {
 		Rate:        recorder.Rate,
 		QPS:         float64(count) * float64(time.Second) / float64(nanoElapsed),
 		ExpectedQPS: recorder.NAgents * recorder.Rate,
+		LoopCount:   recorder.LoopCount,
 		Response:    recorder.Metrics,
 	}
 

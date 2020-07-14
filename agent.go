@@ -3,6 +3,7 @@ package qrn
 import (
 	"context"
 	"database/sql"
+	"sync/atomic"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -56,7 +57,7 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 	defer ticker.Stop()
 	responseTimes := []DataPoint{}
 
-	err := agent.Data.EachLine(func(query string) (bool, error) {
+	loopCount, err := agent.Data.EachLine(func(query string) (bool, error) {
 		select {
 		case <-ctx.Done():
 			return false, nil
@@ -84,6 +85,7 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 	})
 
 	recorder.Add(responseTimes)
+	atomic.StoreInt64(&recorder.LoopCount, loopCount)
 	return err
 }
 
