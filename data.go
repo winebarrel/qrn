@@ -23,11 +23,11 @@ type Data struct {
 	MaxCount int64
 }
 
-func (data *Data) EachLine(block func(string) (bool, error)) error {
+func (data *Data) EachLine(block func(string) (bool, error)) (int64, error) {
 	file, err := os.OpenFile(data.Path, os.O_RDONLY, 0)
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	defer file.Close()
@@ -36,7 +36,7 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 		fileinfo, err := file.Stat()
 
 		if err != nil {
-			return err
+			return 0, err
 		}
 
 		size := fileinfo.Size()
@@ -44,7 +44,7 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 		_, err = file.Seek(offset, io.SeekStart)
 
 		if err != nil {
-			return err
+			return 0, err
 		}
 	}
 
@@ -61,7 +61,7 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 		_, err := LongReadLine(reader)
 
 		if err != nil {
-			return err
+			return 0, err
 		}
 	}
 
@@ -69,7 +69,7 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 	defer ticker.Stop()
 	start := time.Now()
 	limit := originLimit
-	var tx, totalTx int64
+	var tx, totalTx, loopCount int64
 	throttleStart := time.Now()
 
 	for {
@@ -79,13 +79,13 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 			if err == io.EOF {
 				break
 			} else if err != nil {
-				return fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+				return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
 			}
 
 			json, err := parser.ParseBytes(line)
 
 			if err != nil {
-				return fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+				return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
 			}
 
 			rawQuery := json.GetStringBytes(data.Key)
@@ -105,14 +105,14 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 					}
 				}
 
-				return err
+				return loopCount, err
 			}
 
 			tx++
 			totalTx++
 
 			if data.MaxCount > 0 && totalTx >= data.MaxCount {
-				return nil
+				return loopCount, nil
 			}
 
 			select {
@@ -143,11 +143,12 @@ func (data *Data) EachLine(block func(string) (bool, error)) error {
 		_, err := file.Seek(0, io.SeekStart)
 
 		if err != nil {
-			return err
+			return loopCount, err
 		}
 
 		reader = bufio.NewReader(file)
+		loopCount++
 	}
 
-	return nil
+	return loopCount, nil
 }
