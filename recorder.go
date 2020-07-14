@@ -53,9 +53,9 @@ func (recorder *Recorder) AppendResponseTimes(responseTimes []DataPoint) {
 	recorder.ResponseTimes = append(recorder.ResponseTimes, responseTimes...)
 }
 
-func (recorder *Recorder) Start() {
+func (recorder *Recorder) Start(bufsize int) {
 	recorder.ResponseTimes = []DataPoint{}
-	ch := make(chan []DataPoint)
+	ch := make(chan []DataPoint, bufsize)
 	recorder.Channel = ch
 
 	go func() {

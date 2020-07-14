@@ -112,7 +112,7 @@ func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*
 	eg, ctx := errgroup.WithContext(context.Background())
 	ctxWithCancel, cancel := context.WithCancel(ctx)
 	ticker := time.NewTicker(reportPeriod)
-	recorder.Start()
+	recorder.Start(task.Options.NAgents * 3)
 	var doneCnt int32
 
 	for _, v := range task.Agents {
