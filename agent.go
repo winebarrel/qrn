@@ -3,6 +3,7 @@ package qrn
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"sync/atomic"
 	"time"
 
@@ -19,10 +20,12 @@ type ConnInfo struct {
 }
 
 type Agent struct {
+	Id       int
 	ConnInfo *ConnInfo
 	DB       *sql.DB
 	Data     *Data
 	Logger   *Logger
+	Token    string
 }
 
 func (agent *Agent) Prepare() error {
@@ -57,6 +60,12 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 	defer ticker.Stop()
 	responseTimes := []DataPoint{}
 
+	_, err := agent.DB.Exec(fmt.Sprintf("SELECT 'agent(%d) start: token=%s'", agent.Id, agent.Token))
+
+	if err != nil {
+		return err
+	}
+
 	loopCount, err := agent.Data.EachLine(func(query string) (bool, error) {
 		select {
 		case <-ctx.Done():
@@ -84,8 +93,15 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 		return true, nil
 	})
 
+	if err != nil {
+		return err
+	}
+
 	recorder.Add(responseTimes)
 	atomic.StoreInt64(&recorder.LoopCount, loopCount)
+
+	_, err = agent.DB.Exec(fmt.Sprintf("SELECT 'agent(%d) end: token=%s'", agent.Id, agent.Token))
+
 	return err
 }
 

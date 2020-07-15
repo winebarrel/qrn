@@ -6,12 +6,14 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/google/uuid"
 	"golang.org/x/sync/errgroup"
 )
 
 type Task struct {
 	Agents  []*Agent
 	Options *TaskOptions
+	Token   string
 }
 
 type Files []string
@@ -44,6 +46,7 @@ type TaskOptions struct {
 
 func NewTask(options *TaskOptions) (*Task, error) {
 	agents := make([]*Agent, options.NAgents)
+	uuid, _ := uuid.NewRandom()
 
 	connInfo := &ConnInfo{
 		Driver:       options.Driver,
@@ -69,12 +72,14 @@ func NewTask(options *TaskOptions) (*Task, error) {
 			ConnInfo: connInfo,
 			Data:     data,
 			Logger:   options.Logger,
+			Token:    uuid.String(),
 		}
 	}
 
 	task := &Task{
 		Agents:  agents,
 		Options: options,
+		Token:   uuid.String(),
 	}
 
 	return task, nil
@@ -99,6 +104,7 @@ func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*
 		HBins:       task.Options.HBins,
 		HInterval:   task.Options.HInterval,
 		QPSInternal: task.Options.QPSInterval,
+		Token:       task.Token,
 	}
 
 	defer func() {

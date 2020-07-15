@@ -24,6 +24,7 @@ type Recorder struct {
 	HInterval     time.Duration
 	QPSHistory    []float64
 	QPSInternal   time.Duration
+	Token         string
 }
 
 type RecordReport struct {
@@ -42,6 +43,7 @@ type RecordReport struct {
 	ExpectedQPS int
 	LoopCount   int64
 	Response    *tachymeter.Metrics
+	Token       string
 }
 
 type DataPoint struct {
@@ -165,6 +167,7 @@ func (recorder *Recorder) Report() *RecordReport {
 		ExpectedQPS: recorder.NAgents * recorder.Rate,
 		LoopCount:   recorder.LoopCount,
 		Response:    recorder.Metrics,
+		Token:       recorder.Token,
 	}
 
 	if len(qpsHist) > 0 {
