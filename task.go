@@ -44,7 +44,7 @@ type TaskOptions struct {
 	Logger      *Logger
 }
 
-func NewTask(options *TaskOptions) (*Task, error) {
+func NewTask(options *TaskOptions) *Task {
 	agents := make([]*Agent, options.NAgents)
 	uuid, _ := uuid.NewRandom()
 
@@ -82,7 +82,7 @@ func NewTask(options *TaskOptions) (*Task, error) {
 		Token:   uuid.String(),
 	}
 
-	return task, nil
+	return task
 }
 
 func (task *Task) Prepare() error {

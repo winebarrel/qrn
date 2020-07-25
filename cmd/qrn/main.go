@@ -36,13 +36,9 @@ func main() {
 		flags.TaskOptions.Files = qrn.Files{path}
 	}
 
-	task, err := qrn.NewTask(flags.TaskOptions)
+	task := qrn.NewTask(flags.TaskOptions)
 
-	if err != nil {
-		log.Fatalf("task create error: %s", err)
-	}
-
-	err = task.Prepare()
+	err := task.Prepare()
 
 	if err != nil {
 		log.Fatalf("task prepare error: %s", err)
