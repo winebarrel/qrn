@@ -103,7 +103,7 @@ func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*
 		Rate:        task.Options.Rate,
 		HBins:       task.Options.HBins,
 		HInterval:   task.Options.HInterval,
-		QPSInternal: task.Options.QPSInterval,
+		QPSInterval: task.Options.QPSInterval,
 		Token:       task.Token,
 	}
 
