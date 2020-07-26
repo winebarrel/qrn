@@ -16,7 +16,6 @@ const DefaultDriver = "mysql"
 const DefaultTime = 60
 const DefaultJsonKey = "query"
 const DefaultHBins = 10
-const DefaultQPSInterval = 1
 
 type Flags struct {
 	Time        time.Duration
@@ -62,7 +61,6 @@ func parseFlags() (flags *Flags) {
 	logOpt := flag.String("log", "", "file path of query log")
 	logTime := flag.String("logtime", "0", "execution time threshold for logged queries")
 	flag.IntVar(&flags.TaskOptions.Rate, "rate", 0, "rate limit for each agent (qps). zero is unlimited")
-	qpsinterval := flag.Int("qpsinterval", DefaultQPSInterval, "QPS interval (sec)")
 	flag.StringVar(&flags.TaskOptions.Key, "key", DefaultJsonKey, "json key of query")
 	flag.BoolVar(&flags.TaskOptions.Loop, "loop", true, "input data loop flag")
 	flag.BoolVar(&flags.TaskOptions.Force, "force", false, "ignore query error")
@@ -107,15 +105,9 @@ func parseFlags() (flags *Flags) {
 		printErrorAndExit("'-rate' must be >= 0")
 	}
 
-	if *qpsinterval < 1 {
-		printErrorAndExit("'-rate' must be >= 1")
-	}
-
 	if flags.TaskOptions.MaxCount < 0 {
 		printErrorAndExit("'-maxcount' must be >= 0")
 	}
-
-	flags.TaskOptions.QPSInterval = time.Duration(*qpsinterval) * time.Second
 
 	if flen == 0 && flags.Query == "" {
 		printErrorAndExit("'-data' or '-query' is required")

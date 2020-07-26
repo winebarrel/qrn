@@ -5,7 +5,7 @@ qrn is a database benchmarking tool.
 ## Usage
 
 ```
-Usage of ./qrn:
+Usage of qrn:
   -data value
     	file path of execution queries for each agent
   -driver string
@@ -34,8 +34,6 @@ Usage of ./qrn:
     	maximum number of queries for each agent. zero is unlimited
   -nagents int
     	number of agents
-  -qpsinterval int
-    	QPS interval (sec) (default 1)
   -query string
     	execution query
   -random value

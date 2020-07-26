@@ -23,7 +23,6 @@ type Recorder struct {
 	HBins         int
 	HInterval     time.Duration
 	QPSHistory    []float64
-	QPSInterval   time.Duration
 	Token         string
 }
 
@@ -117,12 +116,11 @@ func (recorder *Recorder) calcQPS() {
 		return recorder.ResponseTimes[i].Time.Before(recorder.ResponseTimes[j].Time)
 	})
 
-	interval := recorder.QPSInterval
 	cntHist := []int{0}
 
 	for _, v := range responseTimes {
 		if minTime.Add(1 * time.Second).Before(v.Time) {
-			minTime = minTime.Add(interval)
+			minTime = minTime.Add(1 * time.Second)
 			cntHist = append(cntHist, 0)
 		}
 
@@ -132,7 +130,7 @@ func (recorder *Recorder) calcQPS() {
 	qpsHist := make([]float64, len(cntHist))
 
 	for i, v := range cntHist {
-		qpsHist[i] = float64(v) * float64(time.Second) / float64(interval)
+		qpsHist[i] = float64(v)
 	}
 
 	recorder.QPSHistory = qpsHist
