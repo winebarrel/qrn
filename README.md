@@ -166,3 +166,4 @@ output qrn-1589336606.html
 ## Related Links
 
 * https://github.com/winebarrel/qrnlog
+* https://github.com/winebarrel/genlog
