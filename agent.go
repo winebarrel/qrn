@@ -83,10 +83,12 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 			return false, err
 		}
 
-		agent.Logger.Log(query, rt)
+		tm := time.Now()
+
+		agent.Logger.Log(query, rt, tm)
 
 		responseTimes = append(responseTimes, DataPoint{
-			Time:         time.Now(),
+			Time:         tm,
 			ResponseTime: rt,
 		})
 

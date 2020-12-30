@@ -9,8 +9,9 @@ import (
 )
 
 type QueryLog struct {
-	Query string        `json:"query"`
-	Time  time.Duration `json:"time"`
+	Query     string        `json:"query"`
+	Time      time.Duration `json:"time"`
+	Timestamp time.Time     `json:"timestamp"`
 }
 
 type Logger struct {
@@ -55,14 +56,15 @@ func NewLogger(out io.WriteCloser, threshold time.Duration) *Logger {
 	return logger
 }
 
-func (logger *Logger) Log(query string, time time.Duration) {
+func (logger *Logger) Log(query string, time time.Duration, ts time.Time) {
 	if logger.Null {
 		return
 	}
 
 	ql := QueryLog{
-		Query: query,
-		Time:  time,
+		Query:     query,
+		Time:      time,
+		Timestamp: ts,
 	}
 
 	logger.Channel <- ql
