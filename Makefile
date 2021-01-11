@@ -1,7 +1,7 @@
 SHELL   := /bin/bash
 VERSION := v1.13.1
-GOOS      := $(shell go env GOOS)
-GOARCH    := $(shell go env GOARCH)
+GOOS    := $(shell go env GOOS)
+GOARCH  := $(shell go env GOARCH)
 
 .PHONY: all
 all: build
