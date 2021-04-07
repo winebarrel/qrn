@@ -1,6 +1,6 @@
 # qrn
 
-qrn is a database benchmarking tool.
+qrn is a database load testing tool.
 
 ## Usage
 
