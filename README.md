@@ -169,5 +169,5 @@ output qrn-1589336606.html
     * https://github.com/winebarrel/genlog
 * qrn log analyzer
     * https://github.com/winebarrel/qrnlog
-* Load testing tools like mysqlslap that automatically generate test data
+* MySQL load testing tools like mysqlslap that automatically generate test data
     * https://github.com/winebarrel/qlap
