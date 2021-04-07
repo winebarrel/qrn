@@ -165,5 +165,9 @@ output qrn-1589336606.html
 
 ## Related Links
 
-* https://github.com/winebarrel/qrnlog
-* https://github.com/winebarrel/genlog
+* MySQL General Query Log parser
+    * https://github.com/winebarrel/genlog
+* qrn log analyzer
+    * https://github.com/winebarrel/qrnlog
+* Load testing tools like mysqlslap that automatically generate test data
+    * https://github.com/winebarrel/qlap
