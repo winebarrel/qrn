@@ -28,7 +28,7 @@ type Agent struct {
 	Token    string
 }
 
-func (agent *Agent) Prepare() error {
+func (agent *Agent) Prepare(preQueries []string) error {
 	db, err := sql.Open(agent.ConnInfo.Driver, agent.ConnInfo.DSN)
 
 	if err != nil {
@@ -48,6 +48,14 @@ func (agent *Agent) Prepare() error {
 
 	if err != nil {
 		return err
+	}
+
+	for _, q := range preQueries {
+		_, err = db.Exec(q)
+
+		if err != nil {
+			return err
+		}
 	}
 
 	agent.DB = db
