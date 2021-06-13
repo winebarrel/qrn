@@ -16,13 +16,13 @@ type Task struct {
 	Token   string
 }
 
-type Files []string
+type Strings []string
 
-func (files *Files) String() string {
+func (files *Strings) String() string {
 	return fmt.Sprintf("%v", *files)
 }
 
-func (files *Files) Set(f string) error {
+func (files *Strings) Set(f string) error {
 	*files = append(*files, f)
 	return nil
 }
@@ -32,12 +32,13 @@ type TaskOptions struct {
 	DSN         string
 	NAgents     int
 	Rate        int
-	Files       Files
+	Files       Strings
 	Key         string
 	Loop        bool
 	Force       bool
 	MaxCount    int64
 	Random      bool
+	PreQueries  Strings
 	HBins       int
 	HInterval   time.Duration
 	QPSInterval time.Duration
@@ -87,7 +88,7 @@ func NewTask(options *TaskOptions) *Task {
 
 func (task *Task) Prepare() error {
 	for _, agent := range task.Agents {
-		if err := agent.Prepare(); err != nil {
+		if err := agent.Prepare(task.Options.PreQueries); err != nil {
 			return err
 		}
 	}

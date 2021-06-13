@@ -33,7 +33,7 @@ func main() {
 			log.Fatalf("query error: %s", err)
 		}
 
-		flags.TaskOptions.Files = qrn.Files{path}
+		flags.TaskOptions.Files = qrn.Strings{path}
 	}
 
 	task := qrn.NewTask(flags.TaskOptions)

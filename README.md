@@ -34,6 +34,8 @@ Usage of qrn:
     	maximum number of queries for each agent. zero is unlimited
   -nagents int
     	number of agents
+  -pre-query value
+    	file path of execution queries for each agent
   -query string
     	execution query
   -random value
