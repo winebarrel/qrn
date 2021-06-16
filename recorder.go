@@ -11,6 +11,7 @@ import (
 type Recorder struct {
 	sync.Mutex
 	Files         []string
+	PreQueris     []string
 	Channel       chan []DataPoint
 	ResponseTimes []DataPoint
 	DSN           string
@@ -29,6 +30,7 @@ type Recorder struct {
 type RecordReport struct {
 	DSN         string
 	Files       []string
+	PreQueries  []string
 	Started     time.Time
 	Finished    time.Time
 	Elapsed     time.Duration
@@ -155,6 +157,7 @@ func (recorder *Recorder) Report() *RecordReport {
 	report := &RecordReport{
 		DSN:         recorder.DSN,
 		Files:       recorder.Files,
+		PreQueries:  recorder.PreQueris,
 		Started:     recorder.Started,
 		Finished:    recorder.Finished,
 		Elapsed:     nanoElapsed / time.Second,

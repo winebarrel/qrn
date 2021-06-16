@@ -100,6 +100,7 @@ func (task *Task) Run(n time.Duration, reportPeriod time.Duration, report func(*
 	recorder := &Recorder{
 		DSN:       task.Options.DSN,
 		Files:     task.Options.Files,
+		PreQueris: task.Options.PreQueries,
 		NAgents:   task.Options.NAgents,
 		Rate:      task.Options.Rate,
 		HBins:     task.Options.HBins,
