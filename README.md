@@ -70,6 +70,7 @@ $ qrn -data data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
   "Files": [
     "data.jsonl"
   ],
+  "PreQueries": null,
   "Started": "2020-05-13T11:18:14.224848+09:00",
   "Finished": "2020-05-13T11:18:24.559912+09:00",
   "Elapsed": 10,
