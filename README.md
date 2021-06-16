@@ -135,7 +135,8 @@ $ qrn -data data.jsonl -dsn root:@/ -nagents 4 -rate 5 -time 10 -histogram
       }
     ]
   },
-  "Token": "a579889e-97f9-4fd1-8b33-93ab2c78e6ad"
+  "Token": "a579889e-97f9-4fd1-8b33-93ab2c78e6ad",
+  "GOMAXPROCS": 16
 }
 ```
 

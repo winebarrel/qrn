@@ -1,6 +1,7 @@
 package qrn
 
 import (
+	"runtime"
 	"sort"
 	"sync"
 	"time"
@@ -45,6 +46,7 @@ type RecordReport struct {
 	LoopCount   int64
 	Response    *tachymeter.Metrics
 	Token       string
+	GOMAXPROCS  int
 }
 
 type DataPoint struct {
@@ -169,6 +171,7 @@ func (recorder *Recorder) Report() *RecordReport {
 		LoopCount:   recorder.LoopCount,
 		Response:    recorder.Metrics,
 		Token:       recorder.Token,
+		GOMAXPROCS:  runtime.GOMAXPROCS(0),
 	}
 
 	if len(qpsHist) > 0 {
