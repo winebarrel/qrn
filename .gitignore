@@ -1,4 +1,6 @@
 /qrn
+/qrn.exe
+dist/
 *.jsonl
 *.pprof
 *.html
