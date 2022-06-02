@@ -11,4 +11,5 @@ require (
 	github.com/winebarrel/tachymeter v0.0.0-20200513080248-97d8fe8db2e3
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899
 	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
