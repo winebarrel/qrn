@@ -24,3 +24,13 @@ brews:
     license: MIT
     install: |
       bin.install 'qrn'
+nfpms:
+  - id: qrn-nfpms
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Arch }}"
+    homepage: https://github.com/winebarrel/qrn
+    description: qrn is a database load testing tool.
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/bin
