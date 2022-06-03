@@ -21,11 +21,11 @@ type Logger struct {
 
 type ClosableDiscard struct{}
 
-func (_ *ClosableDiscard) Write(p []byte) (n int, err error) {
+func (cd *ClosableDiscard) Write(p []byte) (n int, err error) {
 	return 0, nil
 }
 
-func (_ *ClosableDiscard) Close() error {
+func (cd *ClosableDiscard) Close() error {
 	return nil
 }
 
