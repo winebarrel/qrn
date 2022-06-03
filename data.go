@@ -72,7 +72,7 @@ func (data *Data) EachLine(block func(string) (bool, error)) (int64, error) {
 	limit := originLimit
 	var tx, totalTx, loopCount int64
 	throttleStart := time.Now()
-	commitRate := int64(data.CommitRate)
+	commitRate := data.CommitRate
 	var nextQuery string
 
 	if commitRate > 0 {
