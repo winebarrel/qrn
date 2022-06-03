@@ -67,6 +67,7 @@ func parseFlags() (flags *Flags) {
 	flag.Int64Var(&flags.TaskOptions.MaxCount, "maxcount", 0, "maximum number of queries for each agent. zero is unlimited")
 	flag.Var(&random, "random", "randomize the start position of input data")
 	flag.Var(&flags.TaskOptions.PreQueries, "pre-query", "queries to be pre-executed for each agent")
+	flag.Int64Var(&flags.TaskOptions.CommitRate, "commit-rate", 0, "commit rate")
 	flag.IntVar(&flags.TaskOptions.HBins, "hbins", DefaultHBins, "histogram bins")
 	hinterval := flag.String("hinterval", "0", "histogram interval")
 	flag.BoolVar(&flags.Histogram, "histogram", false, "show histogram")

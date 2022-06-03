@@ -14,13 +14,14 @@ import (
 const ThrottleInterrupt = 1 * time.Millisecond
 
 type Data struct {
-	Path     string
-	Key      string
-	Loop     bool
-	Force    bool
-	Random   bool
-	Rate     int
-	MaxCount int64
+	Path       string
+	Key        string
+	Loop       bool
+	Force      bool
+	Random     bool
+	Rate       int
+	MaxCount   int64
+	CommitRate int64
 }
 
 func (data *Data) EachLine(block func(string) (bool, error)) (int64, error) {
@@ -71,25 +72,45 @@ func (data *Data) EachLine(block func(string) (bool, error)) (int64, error) {
 	limit := originLimit
 	var tx, totalTx, loopCount int64
 	throttleStart := time.Now()
+	commitRate := int64(data.CommitRate)
+	var nextQuery string
+
+	if commitRate > 0 {
+		commitRate += 2
+		nextQuery = "BEGIN"
+	}
 
 	for {
 		for {
-			line, err := LongReadLine(reader)
+			line := "/* query inserted by qrn */"
+			var query string
 
-			if err == io.EOF {
-				break
-			} else if err != nil {
-				return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+			if nextQuery != "" {
+				query = nextQuery
+				nextQuery = ""
+			} else if commitRate > 0 && totalTx%commitRate == 0 {
+				query = "COMMIT"
+				nextQuery = "BEGIN"
+			} else {
+				rawLine, err := LongReadLine(reader)
+
+				if err == io.EOF {
+					break
+				} else if err != nil {
+					return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+				}
+
+				json, err := parser.ParseBytes(rawLine)
+
+				if err != nil {
+					return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+				}
+
+				rawQuery := json.GetStringBytes(data.Key)
+				line = string(rawLine)
+				query = string(rawQuery)
 			}
 
-			json, err := parser.ParseBytes(line)
-
-			if err != nil {
-				return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
-			}
-
-			rawQuery := json.GetStringBytes(data.Key)
-			query := string(rawQuery)
 			cont, err := block(query)
 
 			if !cont || err != nil {
