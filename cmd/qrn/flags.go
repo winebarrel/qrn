@@ -7,12 +7,12 @@ import (
 	"os"
 	"qrn"
 	"strconv"
+	"strings"
 	"time"
 )
 
 var version string
 
-const DefaultDriver = "mysql"
 const DefaultTime = 60
 const DefaultJsonKey = "query"
 const DefaultHBins = 10
@@ -52,7 +52,7 @@ func parseFlags() (flags *Flags) {
 
 	var random xBool
 
-	flag.StringVar(&flags.TaskOptions.Driver, "driver", DefaultDriver, "database driver")
+	flag.StringVar(&flags.TaskOptions.Driver, "driver", "", "database driver")
 	flag.StringVar(&flags.TaskOptions.DSN, "dsn", "", "data source name")
 	flag.IntVar(&flags.TaskOptions.NAgents, "nagents", 0, "number of agents")
 	argTime := flag.Int("time", DefaultTime, "test run time (sec). zero is unlimited")
@@ -86,6 +86,14 @@ func parseFlags() (flags *Flags) {
 
 	if flags.TaskOptions.DSN == "" {
 		printErrorAndExit("'-dsn' is required")
+	}
+
+	if flags.TaskOptions.Driver == "" {
+		if strings.HasPrefix(flags.TaskOptions.DSN, "postgres:") {
+			flags.TaskOptions.Driver = "pgx"
+		} else {
+			flags.TaskOptions.Driver = "mysql"
+		}
 	}
 
 	if flags.TaskOptions.NAgents < 1 {
