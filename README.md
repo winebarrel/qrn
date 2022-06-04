@@ -177,3 +177,5 @@ output qrn-1589336606.html
     * https://github.com/winebarrel/qrnlog
 * MySQL load testing tools like mysqlslap that automatically generate test data
     * https://github.com/winebarrel/qlap
+* Parser to extract SQL from postgresql.log
+    * https://github.com/winebarrel/poslog
