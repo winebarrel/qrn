@@ -39,6 +39,7 @@ type TaskOptions struct {
 	MaxCount    int64
 	Random      bool
 	PreQueries  Strings
+	CommitRate  int64
 	HBins       int
 	HInterval   time.Duration
 	QPSInterval time.Duration
@@ -60,13 +61,14 @@ func NewTask(options *TaskOptions) *Task {
 
 	for i := 0; i < options.NAgents; i++ {
 		data := &Data{
-			Path:     files[i%flen],
-			Key:      options.Key,
-			Loop:     options.Loop,
-			Force:    options.Force,
-			Random:   options.Random,
-			Rate:     options.Rate,
-			MaxCount: options.MaxCount,
+			Path:       files[i%flen],
+			Key:        options.Key,
+			Loop:       options.Loop,
+			Force:      options.Force,
+			Random:     options.Random,
+			Rate:       options.Rate,
+			MaxCount:   options.MaxCount,
+			CommitRate: options.CommitRate,
 		}
 
 		agents[i] = &Agent{
