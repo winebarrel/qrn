@@ -8,3 +8,4 @@ dist/
 *.sha1sum
 *.js
 *.log
+*.log.*
