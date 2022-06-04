@@ -97,16 +97,21 @@ func (data *Data) EachLine(block func(string) (bool, error)) (int64, error) {
 				if err == io.EOF {
 					break
 				} else if err != nil {
-					return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+					return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, rawLine)
 				}
 
 				json, err := parser.ParseBytes(rawLine)
 
 				if err != nil {
-					return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, string(line))
+					return loopCount, fmt.Errorf("%w: key=%s, json=%s", err, data.Key, rawLine)
 				}
 
 				rawQuery := json.GetStringBytes(data.Key)
+
+				if len(rawQuery) == 0 {
+					return loopCount, fmt.Errorf("query is empty: key=%s, json=%s", data.Key, rawLine)
+				}
+
 				line = string(rawLine)
 				query = string(rawQuery)
 			}
@@ -115,7 +120,7 @@ func (data *Data) EachLine(block func(string) (bool, error)) (int64, error) {
 
 			if !cont || err != nil {
 				if err != nil {
-					errmsg := fmt.Sprintf("key=%s, json=%s", data.Key, string(line))
+					errmsg := fmt.Sprintf("key=%s, json=%s", data.Key, line)
 
 					if data.Force {
 						fmt.Fprintf(os.Stderr, "%s: %s", err, errmsg)
