@@ -6,10 +6,12 @@ qrn is a database load testing tool.
 
 ```
 Usage of qrn:
+  -commit-rate int
+    	commit rate
   -data value
     	file path of execution queries for each agent
   -driver string
-    	database driver (default "mysql")
+    	database driver
   -dsn string
     	data source name
   -force
@@ -35,7 +37,7 @@ Usage of qrn:
   -nagents int
     	number of agents
   -pre-query value
-    	file path of execution queries for each agent
+    	queries to be pre-executed for each agent
   -query string
     	execution query
   -random value
