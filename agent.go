@@ -85,10 +85,15 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 			// nothing to do
 		}
 
-		rt, err := agent.Query(query)
+		rt, err := agent.Query(ctx, query)
 
 		if err != nil {
-			return false, err
+			select {
+			case <-ctx.Done():
+				return false, nil
+			default:
+				return false, err
+			}
 		}
 
 		tm := time.Now()
@@ -115,9 +120,9 @@ func (agent *Agent) Run(ctx context.Context, recorder *Recorder) error {
 	return err
 }
 
-func (agent *Agent) Query(query string) (time.Duration, error) {
+func (agent *Agent) Query(ctx context.Context, query string) (time.Duration, error) {
 	start := time.Now()
-	_, err := agent.DB.Exec(query)
+	_, err := agent.DB.ExecContext(ctx, query)
 	end := time.Now()
 
 	if err != nil {
