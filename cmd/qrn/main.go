@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"golang.org/x/term"
 )
 
 const ReportPeriod = 1
@@ -73,7 +73,7 @@ func withProgress(block func(int, float64, int, time.Duration, int)) func(*qrn.R
 		count := r.Count()
 		qps := float64(count-prev) / ReportPeriod
 		elapsed := time.Since(start)
-		width, _, _ := terminal.GetSize(0)
+		width, _, _ := term.GetSize(0)
 		block(count, qps, width, elapsed, running)
 		prev = count
 	}
@@ -83,7 +83,7 @@ func showResult(flags *Flags, recorder *qrn.Recorder) error {
 	report := recorder.Report()
 	rawJSON, _ := json.MarshalIndent(report, "", "  ")
 
-	w, _, err := terminal.GetSize(0)
+	w, _, err := term.GetSize(0)
 
 	if err != nil {
 		return err
