@@ -10,6 +10,6 @@ require (
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/valyala/fastjson v1.6.4
 	github.com/winebarrel/tachymeter v0.0.0-20200513080248-97d8fe8db2e3
-	golang.org/x/sync v0.1.0
+	golang.org/x/sync v0.2.0
 	golang.org/x/term v0.5.0
 )
