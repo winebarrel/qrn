@@ -11,5 +11,5 @@ require (
 	github.com/valyala/fastjson v1.6.4
 	github.com/winebarrel/tachymeter v0.0.0-20200513080248-97d8fe8db2e3
 	golang.org/x/sync v0.3.0
-	golang.org/x/term v0.9.0
+	golang.org/x/term v0.10.0
 )
