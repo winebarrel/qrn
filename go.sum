@@ -128,8 +128,8 @@ github.com/stretchr/testify v1.8.1 h1:w7B6lhMri9wdJUVmEZPGGhZzrYTPvgJArz7wNPgYKs
 github.com/stretchr/testify v1.8.1/go.mod h1:w2LPCIKwWwSfY2zedu0+kehJoqGctiVI29o6fzry7u4=
 github.com/valyala/fastjson v1.6.4 h1:uAUNq9Z6ymTgGhcm0UynUAB6tlbakBrz6CQFax3BXVQ=
 github.com/valyala/fastjson v1.6.4/go.mod h1:CLCAqky6SMuOcxStkYQvblddUtoRxhYMGLrsQns1aXY=
-github.com/winebarrel/tachymeter v2.0.1+incompatible h1:8rMZ4qEeJgQcLjou7uOmQRJ0DQJ4lEkuDbZwqE4Gu4E=
-github.com/winebarrel/tachymeter v2.0.1+incompatible/go.mod h1:qAicIEdY2vA9fKc/JoVMcsAY7FoXFWqTIsWO3EYwsQM=
+github.com/winebarrel/tachymeter v0.0.0-20200513080248-97d8fe8db2e3 h1:t5ghePxskGmdoLvdDKLFuDTARfYnLvP65UzrTTPE8xU=
+github.com/winebarrel/tachymeter v0.0.0-20200513080248-97d8fe8db2e3/go.mod h1:LiToBvR0aZGMpiO6yk3pHkMnVOVU9m/JxZoMNASdK6k=
 github.com/yuin/goldmark v1.4.13/go.mod h1:6yULJ656Px+3vBD8DxQVa3kxgyrAnzto9xy5taEt/CY=
 github.com/zenazn/goji v0.9.0/go.mod h1:7S9M489iMyHBNxwZnk9/EHS098H4/F6TATF2mIxtB1Q=
 go.uber.org/atomic v1.3.2/go.mod h1:gD2HeocX3+yG+ygLZcrzQJaqmWj9AIm7n08wl/qW/PE=
