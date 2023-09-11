@@ -8,6 +8,8 @@ updates:
       dependencies:
         patterns:
           - "*"
+    ignore:
+      - dependency-name: "tachymeter"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
