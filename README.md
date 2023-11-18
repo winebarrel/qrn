@@ -2,7 +2,8 @@
 
 qrn is a database load testing tool.
 
-**NOTE: Currently developing the new tool. see https://github.com/winebarrel/qube**
+> [!note]
+> Currently developing the new tool. see https://github.com/winebarrel/qube
 
 ## Usage
 
